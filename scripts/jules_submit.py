@@ -129,11 +129,21 @@ TASKS = {
         "phase": "phase-1",
         "prompt": _load_prompt("docs/tasks/phase-1/task5_git_tools.md"),
     },
+    6: {
+        "name": "Task 6 — find Tool",
+        "phase": "phase-1",
+        "prompt": _load_prompt("docs/tasks/phase-1/task6_find.md"),
+    },
+    7: {
+        "name": "Task 7 — Transform Tools (jq, sed, diff)",
+        "phase": "phase-1",
+        "prompt": _load_prompt("docs/tasks/phase-1/task7_transform_tools.md"),
+    },
 }
 
 # ── Wave definitions — groups of task IDs to submit together ─────────────────
 WAVES = {
-    "phase-1": [1, 2, 3, 4, 5],
+    "phase-1": [1, 2, 3, 4, 5, 6, 7],
 }
 
 # ──────────────────────────────────────────────────────────────────────────────
