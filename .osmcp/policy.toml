@@ -1,0 +1,12 @@
+[policy]
+allowed_root = "/"
+allowed_tools = ["grep"]
+allow_mutation = false
+
+[limits]
+timeout_ms = 10000
+max_output_bytes = 1048576
+max_matches = 1000
+
+[audit]
+destination = "stderr"

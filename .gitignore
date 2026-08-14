@@ -1,1 +1,4 @@
 .env.local
+bin/
+*.log
+error_log.txt
