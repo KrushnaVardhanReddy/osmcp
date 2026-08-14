@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
@@ -76,6 +77,9 @@ func main() {
 
 	grepTool := tools.NewGrepTool(policyEngine, envelopeBuilder)
 	toolRegistry.Register(grepTool)
+
+	findTool := tools.NewFindTool(policyEngine, envelopeBuilder)
+	toolRegistry.Register(findTool)
 
 	s := server.NewMCPServer("osmcp", "0.1.0", server.WithToolCapabilities(true))
 
@@ -161,6 +165,82 @@ func main() {
                 }
 
 				envelope := gt.Execute(ctx, args)
+				resBytes, err := json.Marshal(envelope)
+				if err != nil {
+					return mcp.NewToolResultError(fmt.Sprintf("failed to serialize response: %v", err)), nil
+				}
+
+				return mcp.NewToolResultText(string(resBytes)), nil
+			})
+		}
+
+		if t.Name() == "find" {
+			ft := t.(interface {
+				Execute(context.Context, contracts_phase1.FindArgs) contracts.Envelope
+			})
+
+			mcpTool := mcp.NewTool("find",
+				mcp.WithDescription(t.Description()),
+				mcp.WithString("path",
+					mcp.Required(),
+					mcp.Description("Absolute path to the directory to search."),
+				),
+				mcp.WithString("name",
+					mcp.Description("Optional glob pattern to match file names (e.g. '*.go', 'main.*')."),
+				),
+				mcp.WithString("type",
+					mcp.Description("Filter by entry type. Enum: file, dir, any."),
+				),
+				mcp.WithNumber("min_size",
+					mcp.Description("Optional minimum file size in bytes (inclusive)."),
+				),
+				mcp.WithNumber("max_size",
+					mcp.Description("Optional maximum file size in bytes (inclusive)."),
+				),
+				mcp.WithString("modified_after",
+					mcp.Description("Optional ISO 8601 timestamp. Only returns files modified after this time."),
+				),
+				mcp.WithNumber("max_depth",
+					mcp.Description("Maximum directory depth to walk."),
+				),
+			)
+
+			s.AddTool(mcpTool, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+				args := contracts_phase1.FindArgs{
+					Type:     "any",
+					MaxDepth: 10,
+				}
+
+				argsMap, ok := request.Params.Arguments.(map[string]interface{})
+				if ok {
+					if path, ok := argsMap["path"].(string); ok {
+						args.Path = path
+					}
+					if name, ok := argsMap["name"].(string); ok {
+						args.Name = &name
+					}
+					if typ, ok := argsMap["type"].(string); ok {
+						args.Type = typ
+					}
+					if min, ok := argsMap["min_size"].(float64); ok {
+						val := int64(min)
+						args.MinSize = &val
+					}
+					if max, ok := argsMap["max_size"].(float64); ok {
+						val := int64(max)
+						args.MaxSize = &val
+					}
+					if modAfterStr, ok := argsMap["modified_after"].(string); ok {
+						if t, err := time.Parse(time.RFC3339, modAfterStr); err == nil {
+							args.ModifiedAfter = &t
+						}
+					}
+					if md, ok := argsMap["max_depth"].(float64); ok {
+						args.MaxDepth = int(md)
+					}
+				}
+
+				envelope := ft.Execute(ctx, args)
 				resBytes, err := json.Marshal(envelope)
 				if err != nil {
 					return mcp.NewToolResultError(fmt.Sprintf("failed to serialize response: %v", err)), nil
