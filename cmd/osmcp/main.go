@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"time"
 
 	"github.com/mark3labs/mcp-go/server"
 	"github.com/osmcp/osmcp/docs/contracts/cross_cutting"
@@ -94,6 +93,9 @@ func main() {
 
 	gitLogTool := tools.NewGitLogTool(policyEngine, envelopeBuilder)
 	toolRegistry.Register(gitLogTool)
+
+	findTool := tools.NewFindTool(policyEngine, envelopeBuilder)
+	toolRegistry.Register(findTool)
 
 	s := server.NewMCPServer("osmcp", "0.1.0", server.WithToolCapabilities(true))
 

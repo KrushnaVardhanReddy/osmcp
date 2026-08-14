@@ -11,17 +11,17 @@ import (
 	contracts_phase1 "github.com/osmcp/osmcp/docs/contracts/phase-1"
 )
 
-type mockPolicyEngine struct {
+type mockFindPolicyEngine struct {
 	visibleTools []string
 	limits       contracts.PolicyLimits
 	evalErr      error
 }
 
-func (m *mockPolicyEngine) Evaluate(ctx context.Context, toolName string, pathArgs []string, isMutating bool) error {
+func (m *mockFindPolicyEngine) Evaluate(ctx context.Context, toolName string, pathArgs []string, isMutating bool) error {
 	return m.evalErr
 }
 
-func (m *mockPolicyEngine) IsToolVisible(toolName string) bool {
+func (m *mockFindPolicyEngine) IsToolVisible(toolName string) bool {
 	for _, t := range m.visibleTools {
 		if t == toolName {
 			return true
@@ -30,13 +30,13 @@ func (m *mockPolicyEngine) IsToolVisible(toolName string) bool {
 	return false
 }
 
-func (m *mockPolicyEngine) Limits() contracts.PolicyLimits {
+func (m *mockFindPolicyEngine) Limits() contracts.PolicyLimits {
 	return m.limits
 }
 
-type mockEnvelopeBuilder struct{}
+type mockFindEnvelopeBuilder struct{}
 
-func (m *mockEnvelopeBuilder) Success(tool string, data interface{}, meta contracts.Meta) contracts.Envelope {
+func (m *mockFindEnvelopeBuilder) Success(tool string, data interface{}, meta contracts.Meta) contracts.Envelope {
 	return contracts.Envelope{
 		Version: "1",
 		OK:      true,
@@ -46,7 +46,7 @@ func (m *mockEnvelopeBuilder) Success(tool string, data interface{}, meta contra
 	}
 }
 
-func (m *mockEnvelopeBuilder) Failure(tool string, code contracts.ErrorCode, message string, retryable bool, meta contracts.Meta) contracts.Envelope {
+func (m *mockFindEnvelopeBuilder) Failure(tool string, code contracts.ErrorCode, message string, retryable bool, meta contracts.Meta) contracts.Envelope {
 	return contracts.Envelope{
 		Version: "1",
 		OK:      false,
@@ -94,9 +94,9 @@ func setupTempDir(t *testing.T) string {
 // INV-FIND-01: Pure Go
 func TestFindTool_BasicExecution(t *testing.T) {
 	dir := setupTempDir(t)
-	tool := NewFindTool(&mockPolicyEngine{
+	tool := NewFindTool(&mockFindPolicyEngine{
 		limits: contracts.PolicyLimits{TimeoutMs: 5000, MaxMatches: 100},
-	}, &mockEnvelopeBuilder{})
+	}, &mockFindEnvelopeBuilder{})
 
 	nameGlob := "*.go"
 	args := contracts_phase1.FindArgs{
@@ -127,10 +127,10 @@ func TestFindTool_BasicExecution(t *testing.T) {
 // INV-FIND-02: Policy Check
 func TestFindTool_PolicyDenied(t *testing.T) {
 	dir := setupTempDir(t)
-	tool := NewFindTool(&mockPolicyEngine{
+	tool := NewFindTool(&mockFindPolicyEngine{
 		limits:  contracts.PolicyLimits{TimeoutMs: 5000, MaxMatches: 100},
 		evalErr: &contracts.PolicyError{Reason: "denied"},
-	}, &mockEnvelopeBuilder{})
+	}, &mockFindEnvelopeBuilder{})
 
 	args := contracts_phase1.FindArgs{
 		Path:     dir,
@@ -152,9 +152,9 @@ func TestFindTool_PolicyDenied(t *testing.T) {
 
 // INV-FIND-03: Missing Dir
 func TestFindTool_MissingDir(t *testing.T) {
-	tool := NewFindTool(&mockPolicyEngine{
+	tool := NewFindTool(&mockFindPolicyEngine{
 		limits: contracts.PolicyLimits{TimeoutMs: 5000, MaxMatches: 100},
-	}, &mockEnvelopeBuilder{})
+	}, &mockFindEnvelopeBuilder{})
 
 	args := contracts_phase1.FindArgs{
 		Path:     "/does/not/exist/ever",
@@ -177,9 +177,9 @@ func TestFindTool_MissingDir(t *testing.T) {
 // INV-FIND-04: No Matches
 func TestFindTool_NoMatches(t *testing.T) {
 	dir := setupTempDir(t)
-	tool := NewFindTool(&mockPolicyEngine{
+	tool := NewFindTool(&mockFindPolicyEngine{
 		limits: contracts.PolicyLimits{TimeoutMs: 5000, MaxMatches: 100},
-	}, &mockEnvelopeBuilder{})
+	}, &mockFindEnvelopeBuilder{})
 
 	nameGlob := "*.nonexistent"
 	args := contracts_phase1.FindArgs{
@@ -208,9 +208,9 @@ func TestFindTool_NoMatches(t *testing.T) {
 // INV-FIND-05: Truncation
 func TestFindTool_Truncation(t *testing.T) {
 	dir := setupTempDir(t)
-	tool := NewFindTool(&mockPolicyEngine{
+	tool := NewFindTool(&mockFindPolicyEngine{
 		limits: contracts.PolicyLimits{TimeoutMs: 5000, MaxMatches: 2}, // Limit to 2 matches
-	}, &mockEnvelopeBuilder{})
+	}, &mockFindEnvelopeBuilder{})
 
 	args := contracts_phase1.FindArgs{
 		Path:     dir,
@@ -237,9 +237,9 @@ func TestFindTool_Truncation(t *testing.T) {
 // INV-FIND-06: Glob Error
 func TestFindTool_GlobError(t *testing.T) {
 	dir := setupTempDir(t)
-	tool := NewFindTool(&mockPolicyEngine{
+	tool := NewFindTool(&mockFindPolicyEngine{
 		limits: contracts.PolicyLimits{TimeoutMs: 5000, MaxMatches: 100},
-	}, &mockEnvelopeBuilder{})
+	}, &mockFindEnvelopeBuilder{})
 
 	nameGlob := "[invalid"
 	args := contracts_phase1.FindArgs{
@@ -264,9 +264,9 @@ func TestFindTool_GlobError(t *testing.T) {
 // INV-FIND-07: No Symlink Follow
 func TestFindTool_NoSymlinkFollow(t *testing.T) {
 	dir := setupTempDir(t)
-	tool := NewFindTool(&mockPolicyEngine{
+	tool := NewFindTool(&mockFindPolicyEngine{
 		limits: contracts.PolicyLimits{TimeoutMs: 5000, MaxMatches: 100},
-	}, &mockEnvelopeBuilder{})
+	}, &mockFindEnvelopeBuilder{})
 
 	// Target the symlink directly to see if we walk its children
 	args := contracts_phase1.FindArgs{
