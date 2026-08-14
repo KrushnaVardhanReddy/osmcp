@@ -8,6 +8,11 @@ import (
 
 	"github.com/osmcp/osmcp/docs/contracts/cross_cutting"
 	contracts_phase1 "github.com/osmcp/osmcp/docs/contracts/phase-1"
+	"encoding/json"
+	"fmt"
+	"github.com/mark3labs/mcp-go/mcp"
+	"github.com/mark3labs/mcp-go/server"
+
 )
 
 type diffTool struct {
@@ -96,4 +101,46 @@ func (t *diffTool) Execute(ctx context.Context, args contracts_phase1.DiffArgs) 
 
 	meta.ExecutionTimeMs = time.Since(start).Milliseconds()
 	return t.builder.Success(t.Name(), data, meta)
+}
+
+func (t *diffTool) RegisterMCP(s *server.MCPServer) {
+
+	mcpTool := mcp.NewTool("diff",
+		mcp.WithDescription(t.Description()),
+		mcp.WithString("a",
+			mcp.Required(),
+			mcp.Description("The original text (left side)."),
+		),
+		mcp.WithString("b",
+			mcp.Required(),
+			mcp.Description("The modified text (right side)."),
+		),
+		mcp.WithNumber("context_lines",
+			mcp.Description("Number of context lines around each change."),
+		),
+	)
+	s.AddTool(mcpTool, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+		args := contracts_phase1.DiffArgs{
+			ContextLines: 3,
+		}
+		argsMap, ok := request.Params.Arguments.(map[string]interface{})
+		if ok {
+			if a, ok := argsMap["a"].(string); ok {
+				args.A = a
+			}
+			if b, ok := argsMap["b"].(string); ok {
+				args.B = b
+			}
+			if cl, ok := argsMap["context_lines"].(float64); ok {
+				args.ContextLines = int(cl)
+			}
+		}
+		envelope := t.Execute(ctx, args)
+		resBytes, err := json.Marshal(envelope)
+		if err != nil {
+			return mcp.NewToolResultError(fmt.Sprintf("failed to serialize response: %v", err)), nil
+		}
+		return mcp.NewToolResultText(string(resBytes)), nil
+	})
+
 }

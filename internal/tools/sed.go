@@ -9,6 +9,10 @@ import (
 
 	"github.com/osmcp/osmcp/docs/contracts/cross_cutting"
 	contracts_phase1 "github.com/osmcp/osmcp/docs/contracts/phase-1"
+	"encoding/json"
+	"github.com/mark3labs/mcp-go/mcp"
+	"github.com/mark3labs/mcp-go/server"
+
 )
 
 type sedTool struct {
@@ -134,4 +138,38 @@ func (t *sedTool) Execute(ctx context.Context, args contracts_phase1.SedArgs) co
 
 	meta.ExecutionTimeMs = time.Since(start).Milliseconds()
 	return t.builder.Success(t.Name(), data, meta)
+}
+
+func (t *sedTool) RegisterMCP(s *server.MCPServer) {
+
+	mcpTool := mcp.NewTool("sed",
+		mcp.WithDescription(t.Description()),
+		mcp.WithString("input",
+			mcp.Required(),
+			mcp.Description("The text content to transform."),
+		),
+		mcp.WithString("expression",
+			mcp.Required(),
+			mcp.Description("A sed-style substitute expression: s/pattern/replacement/flags. Supported flags: g (global), i (case-insensitive)."),
+		),
+	)
+	s.AddTool(mcpTool, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+		args := contracts_phase1.SedArgs{}
+		argsMap, ok := request.Params.Arguments.(map[string]interface{})
+		if ok {
+			if input, ok := argsMap["input"].(string); ok {
+				args.Input = input
+			}
+			if expression, ok := argsMap["expression"].(string); ok {
+				args.Expression = expression
+			}
+		}
+		envelope := t.Execute(ctx, args)
+		resBytes, err := json.Marshal(envelope)
+		if err != nil {
+			return mcp.NewToolResultError(fmt.Sprintf("failed to serialize response: %v", err)), nil
+		}
+		return mcp.NewToolResultText(string(resBytes)), nil
+	})
+
 }

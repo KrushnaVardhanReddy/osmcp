@@ -9,6 +9,9 @@ import (
 	"github.com/itchyny/gojq"
 	"github.com/osmcp/osmcp/docs/contracts/cross_cutting"
 	contracts_phase1 "github.com/osmcp/osmcp/docs/contracts/phase-1"
+	"github.com/mark3labs/mcp-go/mcp"
+	"github.com/mark3labs/mcp-go/server"
+
 )
 
 type jqTool struct {
@@ -139,4 +142,46 @@ func (t *jqTool) Execute(ctx context.Context, args contracts_phase1.JqArgs) cont
 
 	meta.ExecutionTimeMs = time.Since(start).Milliseconds()
 	return t.builder.Success(t.Name(), data, meta)
+}
+
+func (t *jqTool) RegisterMCP(s *server.MCPServer) {
+
+	mcpTool := mcp.NewTool("jq",
+		mcp.WithDescription(t.Description()),
+		mcp.WithString("input",
+			mcp.Required(),
+			mcp.Description("JSON string to query."),
+		),
+		mcp.WithString("filter",
+			mcp.Required(),
+			mcp.Description("A jq filter expression (e.g. '.users[] | .name')."),
+		),
+		mcp.WithBoolean("compact",
+			mcp.Description("If true, output is compact (no pretty-print)."),
+		),
+	)
+	s.AddTool(mcpTool, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+		args := contracts_phase1.JqArgs{
+			Compact: false,
+		}
+		argsMap, ok := request.Params.Arguments.(map[string]interface{})
+		if ok {
+			if input, ok := argsMap["input"].(string); ok {
+				args.Input = input
+			}
+			if filter, ok := argsMap["filter"].(string); ok {
+				args.Filter = filter
+			}
+			if compact, ok := argsMap["compact"].(bool); ok {
+				args.Compact = compact
+			}
+		}
+		envelope := t.Execute(ctx, args)
+		resBytes, err := json.Marshal(envelope)
+		if err != nil {
+			return mcp.NewToolResultError(fmt.Sprintf("failed to serialize response: %v", err)), nil
+		}
+		return mcp.NewToolResultText(string(resBytes)), nil
+	})
+
 }
