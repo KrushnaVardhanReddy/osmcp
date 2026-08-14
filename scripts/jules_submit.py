@@ -51,7 +51,7 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO_SOURCE = "sources/github/KrushnaVardhanReddy/osmcp"
 
 # Parse branch from args if provided
-BRANCH = "feature/dev"
+BRANCH = "main"
 if "--branch" in sys.argv:
     idx = sys.argv.index("--branch")
     if idx + 1 < len(sys.argv):
