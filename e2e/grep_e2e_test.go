@@ -14,15 +14,7 @@ import (
 	contracts_phase1 "github.com/osmcp/osmcp/docs/contracts/phase-1"
 )
 
-func getPolicyPath(name string) string {
-	cwd, _ := os.Getwd()
-	return filepath.Join(cwd, "..", "testdata", "policies", name)
-}
 
-func getFixturesPath() string {
-	cwd, _ := os.Getwd()
-	return filepath.Join(cwd, "..", "testdata", "fixtures")
-}
 
 func TestE2E_ToolsList_Visible(t *testing.T) {
 	c := setupMCPClient(t, getPolicyPath("readonly.toml"))

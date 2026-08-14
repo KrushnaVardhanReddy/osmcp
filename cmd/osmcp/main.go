@@ -75,6 +75,9 @@ func main() {
 	toolRegistry.Register(tools.NewHeadTool(policyEngine, envelopeBuilder))
 	toolRegistry.Register(tools.NewTailTool(policyEngine, envelopeBuilder))
 	toolRegistry.Register(tools.NewDuTool(policyEngine, envelopeBuilder))
+	toolRegistry.Register(tools.NewJqTool(policyEngine, envelopeBuilder))
+	toolRegistry.Register(tools.NewSedTool(policyEngine, envelopeBuilder))
+	toolRegistry.Register(tools.NewDiffTool(policyEngine, envelopeBuilder))
 
 	lsTool := tools.NewLsTool(policyEngine, envelopeBuilder)
 	toolRegistry.Register(lsTool)
@@ -104,6 +107,9 @@ func main() {
 	toolRegistry.Register(tools.NewHeadTool(policyEngine, envelopeBuilder))
 	toolRegistry.Register(tools.NewTailTool(policyEngine, envelopeBuilder))
 	toolRegistry.Register(tools.NewDuTool(policyEngine, envelopeBuilder))
+	toolRegistry.Register(tools.NewJqTool(policyEngine, envelopeBuilder))
+	toolRegistry.Register(tools.NewSedTool(policyEngine, envelopeBuilder))
+	toolRegistry.Register(tools.NewDiffTool(policyEngine, envelopeBuilder))
 
 	s := server.NewMCPServer("osmcp", "0.1.0", server.WithToolCapabilities(true))
 

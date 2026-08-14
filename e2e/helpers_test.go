@@ -51,3 +51,14 @@ func (c *mcpClientWrapper) Close() {
 		c.client.Close()
 	}
 }
+
+
+func getPolicyPath(name string) string {
+	cwd, _ := os.Getwd()
+	return filepath.Join(cwd, "..", "testdata", "policies", name)
+}
+
+func getFixturesPath() string {
+	cwd, _ := os.Getwd()
+	return filepath.Join(cwd, "..", "testdata", "fixtures")
+}
