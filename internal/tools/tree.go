@@ -11,6 +11,10 @@ import (
 
 	"github.com/osmcp/osmcp/docs/contracts/cross_cutting"
 	contracts_phase1 "github.com/osmcp/osmcp/docs/contracts/phase-1"
+	"encoding/json"
+	"github.com/mark3labs/mcp-go/mcp"
+	"github.com/mark3labs/mcp-go/server"
+
 )
 
 type treeTool struct {
@@ -181,4 +185,53 @@ func (t *treeTool) Execute(ctx context.Context, args contracts_phase1.TreeArgs) 
 	}
 
 	return t.builder.Success(t.Name(), data, meta)
+}
+
+func (t *treeTool) RegisterMCP(s *server.MCPServer) {
+
+	mcpTool := mcp.NewTool("tree",
+		mcp.WithDescription(t.Description()),
+		mcp.WithString("path",
+			mcp.Required(),
+			mcp.Description("Absolute path to the root directory."),
+		),
+		mcp.WithNumber("max_depth",
+			mcp.Description("Maximum depth to display."),
+		),
+		mcp.WithBoolean("show_hidden",
+			mcp.Description("Include files and dirs starting with a dot."),
+		),
+		mcp.WithBoolean("dirs_only",
+			mcp.Description("If true, only show directories."),
+		),
+	)
+	s.AddTool(mcpTool, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+		args := contracts_phase1.TreeArgs{
+			MaxDepth: 3,
+			ShowHidden: false,
+			DirsOnly: false,
+		}
+		argsMap, ok := request.Params.Arguments.(map[string]interface{})
+		if ok {
+			if path, ok := argsMap["path"].(string); ok {
+				args.Path = path
+			}
+			if maxDepth, ok := argsMap["max_depth"].(float64); ok {
+				args.MaxDepth = int(maxDepth)
+			}
+			if showHidden, ok := argsMap["show_hidden"].(bool); ok {
+				args.ShowHidden = showHidden
+			}
+			if dirsOnly, ok := argsMap["dirs_only"].(bool); ok {
+				args.DirsOnly = dirsOnly
+			}
+		}
+		envelope := t.Execute(ctx, args)
+		resBytes, err := json.Marshal(envelope)
+		if err != nil {
+			return mcp.NewToolResultError(fmt.Sprintf("failed to serialize response: %v", err)), nil
+		}
+		return mcp.NewToolResultText(string(resBytes)), nil
+	})
+
 }

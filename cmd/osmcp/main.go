@@ -100,6 +100,11 @@ func main() {
 	findTool := tools.NewFindTool(policyEngine, envelopeBuilder)
 	toolRegistry.Register(findTool)
 
+	toolRegistry.Register(tools.NewTreeTool(policyEngine, envelopeBuilder))
+	toolRegistry.Register(tools.NewHeadTool(policyEngine, envelopeBuilder))
+	toolRegistry.Register(tools.NewTailTool(policyEngine, envelopeBuilder))
+	toolRegistry.Register(tools.NewDuTool(policyEngine, envelopeBuilder))
+
 	s := server.NewMCPServer("osmcp", "0.1.0", server.WithToolCapabilities(true))
 
 	visibleTools := toolRegistry.VisibleTools()

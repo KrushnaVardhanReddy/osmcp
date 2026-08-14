@@ -11,6 +11,10 @@ import (
 
 	"github.com/osmcp/osmcp/docs/contracts/cross_cutting"
 	contracts_phase1 "github.com/osmcp/osmcp/docs/contracts/phase-1"
+	"encoding/json"
+	"github.com/mark3labs/mcp-go/mcp"
+	"github.com/mark3labs/mcp-go/server"
+
 )
 
 type headTool struct {
@@ -135,4 +139,39 @@ func (t *headTool) Execute(ctx context.Context, args contracts_phase1.HeadArgs) 
 
 	meta.ExecutionTimeMs = time.Since(start).Milliseconds()
 	return t.builder.Success(t.Name(), data, meta)
+}
+
+func (t *headTool) RegisterMCP(s *server.MCPServer) {
+
+	mcpTool := mcp.NewTool("head",
+		mcp.WithDescription(t.Description()),
+		mcp.WithString("path",
+			mcp.Required(),
+			mcp.Description("Absolute path to the file."),
+		),
+		mcp.WithNumber("lines",
+			mcp.Description("Number of lines to return from the top."),
+		),
+	)
+	s.AddTool(mcpTool, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+		args := contracts_phase1.HeadArgs{
+			Lines: 10,
+		}
+		argsMap, ok := request.Params.Arguments.(map[string]interface{})
+		if ok {
+			if path, ok := argsMap["path"].(string); ok {
+				args.Path = path
+			}
+			if lines, ok := argsMap["lines"].(float64); ok {
+				args.Lines = int(lines)
+			}
+		}
+		envelope := t.Execute(ctx, args)
+		resBytes, err := json.Marshal(envelope)
+		if err != nil {
+			return mcp.NewToolResultError(fmt.Sprintf("failed to serialize response: %v", err)), nil
+		}
+		return mcp.NewToolResultText(string(resBytes)), nil
+	})
+
 }
