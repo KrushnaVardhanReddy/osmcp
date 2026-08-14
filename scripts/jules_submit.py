@@ -136,11 +136,7 @@ def submit_task(task_num):
         sys.exit(1)
 
     task = TASKS[task_num]
-    full_prompt = SAFETY_RULES + "
-
----
-
-" + task["prompt"]
+    full_prompt = SAFETY_RULES + "\n\n---\n\n" + task["prompt"]
 
     payload = json.dumps({
         "prompt": full_prompt,
@@ -205,11 +201,7 @@ def submit_file(filepath):
     with open(filepath) as f:
         prompt_content = f.read()
 
-    full_prompt = SAFETY_RULES + "
-
----
-
-" + prompt_content
+    full_prompt = SAFETY_RULES + "\n\n---\n\n" + prompt_content
     payload = json.dumps({
         "prompt": full_prompt,
         "sourceContext": {
