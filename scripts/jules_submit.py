@@ -119,11 +119,16 @@ TASKS = {
         "phase": "phase-1",
         "prompt": _load_prompt("docs/tasks/phase-1/task3_e2e_testing.md"),
     },
+    4: {
+        "name": "Task 4 — File Inspection (ls, cat, stat, wc)",
+        "phase": "phase-1",
+        "prompt": _load_prompt("docs/tasks/phase-1/task4_file_inspection.md"),
+    },
 }
 
 # ── Wave definitions — groups of task IDs to submit together ─────────────────
 WAVES = {
-    "phase-1": [1, 2, 3],
+    "phase-1": [1, 2, 3, 4],
 }
 
 # ──────────────────────────────────────────────────────────────────────────────

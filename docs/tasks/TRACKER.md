@@ -9,3 +9,4 @@ This file tracks the status of all Jules tasks and the corresponding Jules sessi
 | [Task 1: Foundation](./phase-1/task1_foundation.md) | In Progress | [10242389211900472288](https://jules.google.com/session/10242389211900472288) | |
 | [Task 2: grep & server](./phase-1/task2_grep_and_server.md) | Pending | | |
 | [Task 3: E2E Testing](./phase-1/task3_e2e_testing.md) | Pending | | |
+| [Task 4: File Inspection](./phase-1/task4_file_inspection.md) | Pending | | |
