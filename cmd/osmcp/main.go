@@ -77,6 +77,15 @@ func main() {
 	grepTool := tools.NewGrepTool(policyEngine, envelopeBuilder)
 	toolRegistry.Register(grepTool)
 
+	jqTool := tools.NewJqTool(policyEngine, envelopeBuilder)
+	toolRegistry.Register(jqTool)
+
+	sedTool := tools.NewSedTool(policyEngine, envelopeBuilder)
+	toolRegistry.Register(sedTool)
+
+	diffTool := tools.NewDiffTool(policyEngine, envelopeBuilder)
+	toolRegistry.Register(diffTool)
+
 	s := server.NewMCPServer("osmcp", "0.1.0", server.WithToolCapabilities(true))
 
 	visibleTools := toolRegistry.VisibleTools()
@@ -161,6 +170,136 @@ func main() {
                 }
 
 				envelope := gt.Execute(ctx, args)
+				resBytes, err := json.Marshal(envelope)
+				if err != nil {
+					return mcp.NewToolResultError(fmt.Sprintf("failed to serialize response: %v", err)), nil
+				}
+
+				return mcp.NewToolResultText(string(resBytes)), nil
+			})
+		} else if t.Name() == "jq" {
+			jt := t.(interface {
+				Execute(context.Context, contracts_phase1.JqArgs) contracts.Envelope
+			})
+
+			mcpTool := mcp.NewTool("jq",
+				mcp.WithDescription(t.Description()),
+				mcp.WithString("input",
+					mcp.Required(),
+					mcp.Description("JSON string to query."),
+				),
+				mcp.WithString("filter",
+					mcp.Required(),
+					mcp.Description("A jq filter expression (e.g. '.users[] | .name')."),
+				),
+				mcp.WithBoolean("compact",
+					mcp.Description("If true, output is compact (no pretty-print)."),
+				),
+			)
+
+			s.AddTool(mcpTool, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+				args := contracts_phase1.JqArgs{
+					Compact: false,
+				}
+
+				argsMap, ok := request.Params.Arguments.(map[string]interface{})
+				if ok {
+					if input, ok := argsMap["input"].(string); ok {
+						args.Input = input
+					}
+					if filter, ok := argsMap["filter"].(string); ok {
+						args.Filter = filter
+					}
+					if compact, ok := argsMap["compact"].(bool); ok {
+						args.Compact = compact
+					}
+				}
+
+				envelope := jt.Execute(ctx, args)
+				resBytes, err := json.Marshal(envelope)
+				if err != nil {
+					return mcp.NewToolResultError(fmt.Sprintf("failed to serialize response: %v", err)), nil
+				}
+
+				return mcp.NewToolResultText(string(resBytes)), nil
+			})
+		} else if t.Name() == "sed" {
+			st := t.(interface {
+				Execute(context.Context, contracts_phase1.SedArgs) contracts.Envelope
+			})
+
+			mcpTool := mcp.NewTool("sed",
+				mcp.WithDescription(t.Description()),
+				mcp.WithString("input",
+					mcp.Required(),
+					mcp.Description("The text content to transform."),
+				),
+				mcp.WithString("expression",
+					mcp.Required(),
+					mcp.Description("A sed-style substitute expression: s/pattern/replacement/flags. Supported flags: g (global), i (case-insensitive)."),
+				),
+			)
+
+			s.AddTool(mcpTool, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+				args := contracts_phase1.SedArgs{}
+
+				argsMap, ok := request.Params.Arguments.(map[string]interface{})
+				if ok {
+					if input, ok := argsMap["input"].(string); ok {
+						args.Input = input
+					}
+					if expression, ok := argsMap["expression"].(string); ok {
+						args.Expression = expression
+					}
+				}
+
+				envelope := st.Execute(ctx, args)
+				resBytes, err := json.Marshal(envelope)
+				if err != nil {
+					return mcp.NewToolResultError(fmt.Sprintf("failed to serialize response: %v", err)), nil
+				}
+
+				return mcp.NewToolResultText(string(resBytes)), nil
+			})
+		} else if t.Name() == "diff" {
+			dt := t.(interface {
+				Execute(context.Context, contracts_phase1.DiffArgs) contracts.Envelope
+			})
+
+			mcpTool := mcp.NewTool("diff",
+				mcp.WithDescription(t.Description()),
+				mcp.WithString("a",
+					mcp.Required(),
+					mcp.Description("The original text (left side)."),
+				),
+				mcp.WithString("b",
+					mcp.Required(),
+					mcp.Description("The modified text (right side)."),
+				),
+				mcp.WithNumber("context_lines",
+					mcp.Description("Number of context lines around each change."),
+				),
+			)
+
+			s.AddTool(mcpTool, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+				args := contracts_phase1.DiffArgs{
+					ContextLines: 3,
+				}
+
+				argsMap, ok := request.Params.Arguments.(map[string]interface{})
+				if ok {
+					if a, ok := argsMap["a"].(string); ok {
+						args.A = a
+					}
+					if b, ok := argsMap["b"].(string); ok {
+						args.B = b
+					}
+					if cl, ok := argsMap["context_lines"].(float64); ok {
+						args.ContextLines = int(cl)
+					}
+				}
+
+				envelope := dt.Execute(ctx, args)
 				resBytes, err := json.Marshal(envelope)
 				if err != nil {
 					return mcp.NewToolResultError(fmt.Sprintf("failed to serialize response: %v", err)), nil
