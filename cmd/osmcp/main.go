@@ -77,11 +77,22 @@ func main() {
 	grepTool := tools.NewGrepTool(policyEngine, envelopeBuilder)
 	toolRegistry.Register(grepTool)
 
+	lsTool := tools.NewLsTool(policyEngine, envelopeBuilder)
+	toolRegistry.Register(lsTool)
+
+	catTool := tools.NewCatTool(policyEngine, envelopeBuilder)
+	toolRegistry.Register(catTool)
+
+	statTool := tools.NewStatTool(policyEngine, envelopeBuilder)
+	toolRegistry.Register(statTool)
+
+	wcTool := tools.NewWcTool(policyEngine, envelopeBuilder)
+	toolRegistry.Register(wcTool)
+
 	s := server.NewMCPServer("osmcp", "0.1.0", server.WithToolCapabilities(true))
 
 	visibleTools := toolRegistry.VisibleTools()
 	for _, t := range visibleTools {
-		// Only grep is implemented right now
 		if t.Name() == "grep" {
 			gt := t.(interface {
 				Execute(context.Context, contracts_phase1.GrepArgs) contracts.Envelope
@@ -161,6 +172,167 @@ func main() {
                 }
 
 				envelope := gt.Execute(ctx, args)
+				resBytes, err := json.Marshal(envelope)
+				if err != nil {
+					return mcp.NewToolResultError(fmt.Sprintf("failed to serialize response: %v", err)), nil
+				}
+
+				return mcp.NewToolResultText(string(resBytes)), nil
+			})
+		} else if t.Name() == "ls" {
+			lt := t.(interface {
+				Execute(context.Context, contracts_phase1.LsArgs) contracts.Envelope
+			})
+
+			mcpTool := mcp.NewTool("ls",
+				mcp.WithDescription(t.Description()),
+				mcp.WithString("path",
+					mcp.Required(),
+					mcp.Description("Absolute path to the directory to list."),
+				),
+				mcp.WithBoolean("recursive",
+					mcp.Description("If true, walks subdirectories."),
+				),
+				mcp.WithNumber("max_depth",
+					mcp.Description("Maximum depth for recursive listing."),
+				),
+				mcp.WithBoolean("show_hidden",
+					mcp.Description("If true, includes files and directories starting with a dot (.)."),
+				),
+			)
+
+			s.AddTool(mcpTool, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+				args := contracts_phase1.LsArgs{
+					Recursive:  false,
+					MaxDepth:   1,
+					ShowHidden: false,
+				}
+
+				argsMap, ok := request.Params.Arguments.(map[string]interface{})
+				if ok {
+					if path, ok := argsMap["path"].(string); ok {
+						args.Path = path
+					}
+					if rec, ok := argsMap["recursive"].(bool); ok {
+						args.Recursive = rec
+					}
+					if maxDepth, ok := argsMap["max_depth"].(float64); ok {
+						args.MaxDepth = int(maxDepth)
+					}
+					if showHidden, ok := argsMap["show_hidden"].(bool); ok {
+						args.ShowHidden = showHidden
+					}
+				}
+
+				envelope := lt.Execute(ctx, args)
+				resBytes, err := json.Marshal(envelope)
+				if err != nil {
+					return mcp.NewToolResultError(fmt.Sprintf("failed to serialize response: %v", err)), nil
+				}
+
+				return mcp.NewToolResultText(string(resBytes)), nil
+			})
+		} else if t.Name() == "cat" {
+			ct := t.(interface {
+				Execute(context.Context, contracts_phase1.CatArgs) contracts.Envelope
+			})
+
+			mcpTool := mcp.NewTool("cat",
+				mcp.WithDescription(t.Description()),
+				mcp.WithString("path",
+					mcp.Required(),
+					mcp.Description("Absolute path to the file to read."),
+				),
+				mcp.WithNumber("start_line",
+					mcp.Description("Line number to start reading from (1-indexed)."),
+				),
+				mcp.WithNumber("end_line",
+					mcp.Description("Line number to stop reading at (inclusive). If omitted, reads to EOF."),
+				),
+			)
+
+			s.AddTool(mcpTool, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+				args := contracts_phase1.CatArgs{
+					StartLine: 1,
+				}
+
+				argsMap, ok := request.Params.Arguments.(map[string]interface{})
+				if ok {
+					if path, ok := argsMap["path"].(string); ok {
+						args.Path = path
+					}
+					if sl, ok := argsMap["start_line"].(float64); ok {
+						args.StartLine = int(sl)
+					}
+					if el, ok := argsMap["end_line"].(float64); ok {
+						val := int(el)
+						args.EndLine = &val
+					}
+				}
+
+				envelope := ct.Execute(ctx, args)
+				resBytes, err := json.Marshal(envelope)
+				if err != nil {
+					return mcp.NewToolResultError(fmt.Sprintf("failed to serialize response: %v", err)), nil
+				}
+
+				return mcp.NewToolResultText(string(resBytes)), nil
+			})
+		} else if t.Name() == "stat" {
+			st := t.(interface {
+				Execute(context.Context, contracts_phase1.StatArgs) contracts.Envelope
+			})
+
+			mcpTool := mcp.NewTool("stat",
+				mcp.WithDescription(t.Description()),
+				mcp.WithString("path",
+					mcp.Required(),
+					mcp.Description("Absolute path to the file or directory."),
+				),
+			)
+
+			s.AddTool(mcpTool, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+				args := contracts_phase1.StatArgs{}
+
+				argsMap, ok := request.Params.Arguments.(map[string]interface{})
+				if ok {
+					if path, ok := argsMap["path"].(string); ok {
+						args.Path = path
+					}
+				}
+
+				envelope := st.Execute(ctx, args)
+				resBytes, err := json.Marshal(envelope)
+				if err != nil {
+					return mcp.NewToolResultError(fmt.Sprintf("failed to serialize response: %v", err)), nil
+				}
+
+				return mcp.NewToolResultText(string(resBytes)), nil
+			})
+		} else if t.Name() == "wc" {
+			wt := t.(interface {
+				Execute(context.Context, contracts_phase1.WcArgs) contracts.Envelope
+			})
+
+			mcpTool := mcp.NewTool("wc",
+				mcp.WithDescription(t.Description()),
+				mcp.WithString("path",
+					mcp.Required(),
+					mcp.Description("Absolute path to the file."),
+				),
+			)
+
+			s.AddTool(mcpTool, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+				args := contracts_phase1.WcArgs{}
+
+				argsMap, ok := request.Params.Arguments.(map[string]interface{})
+				if ok {
+					if path, ok := argsMap["path"].(string); ok {
+						args.Path = path
+					}
+				}
+
+				envelope := wt.Execute(ctx, args)
 				resBytes, err := json.Marshal(envelope)
 				if err != nil {
 					return mcp.NewToolResultError(fmt.Sprintf("failed to serialize response: %v", err)), nil
