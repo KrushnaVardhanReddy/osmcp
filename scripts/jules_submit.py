@@ -114,11 +114,6 @@ TASKS = {
         "phase": "phase-1",
         "prompt": _load_prompt("docs/tasks/phase-1/task2_grep_and_server.md"),
     },
-    3: {
-        "name": "Task 3 — E2E Testing",
-        "phase": "phase-1",
-        "prompt": _load_prompt("docs/tasks/phase-1/task3_e2e_testing.md"),
-    },
     4: {
         "name": "Task 4 — File Inspection (ls, cat, stat, wc)",
         "phase": "phase-1",
@@ -144,11 +139,16 @@ TASKS = {
         "phase": "phase-1",
         "prompt": _load_prompt("docs/tasks/phase-1/task8_utility_tools.md"),
     },
+    9: {
+        "name": "Task 9 — E2E Testing",
+        "phase": "phase-1",
+        "prompt": _load_prompt("docs/tasks/phase-1/task9_e2e_testing.md"),
+    },
 }
 
 # ── Wave definitions — groups of task IDs to submit together ─────────────────
 WAVES = {
-    "phase-1": [1, 2, 3, 4, 5, 6, 7, 8],
+    "phase-1": [4, 5, 6, 7, 8, 9],
 }
 
 # ──────────────────────────────────────────────────────────────────────────────
