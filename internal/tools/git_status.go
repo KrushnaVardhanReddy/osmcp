@@ -2,12 +2,17 @@ package tools
 
 import (
 	"context"
+	"fmt"
 	"path/filepath"
 	"time"
 
 	"github.com/go-git/go-git/v5"
 	"github.com/osmcp/osmcp/docs/contracts/cross_cutting"
 	contracts_phase1 "github.com/osmcp/osmcp/docs/contracts/phase-1"
+	"encoding/json"
+	"github.com/mark3labs/mcp-go/mcp"
+	"github.com/mark3labs/mcp-go/server"
+
 )
 
 type gitStatusTool struct {
@@ -106,5 +111,31 @@ func (t *gitStatusTool) Execute(ctx context.Context, args contracts_phase1.GitSt
 
 	return t.builder.Success(t.Name(), data, contracts.Meta{
 		ExecutionTimeMs: time.Since(start).Milliseconds(),
+	})
+}
+
+
+func (t *gitStatusTool) RegisterMCP(s *server.MCPServer) {
+	mcpTool := mcp.NewTool("git_status",
+		mcp.WithDescription(t.Description()),
+		mcp.WithString("path",
+			mcp.Required(),
+			mcp.Description("Absolute path to the repository root (or any subdirectory within it)."),
+		),
+	)
+	s.AddTool(mcpTool, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+		args := contracts_phase1.GitStatusArgs{}
+		argsMap, ok := request.Params.Arguments.(map[string]interface{})
+		if ok {
+			if path, ok := argsMap["path"].(string); ok {
+				args.Path = path
+			}
+		}
+		envelope := t.Execute(ctx, args)
+		resBytes, err := json.Marshal(envelope)
+		if err != nil {
+			return mcp.NewToolResultError(fmt.Sprintf("failed to serialize response: %v", err)), nil
+		}
+		return mcp.NewToolResultText(string(resBytes)), nil
 	})
 }

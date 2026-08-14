@@ -3,6 +3,7 @@ package tools
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"path/filepath"
 	"strings"
 	"time"
@@ -13,6 +14,10 @@ import (
 	"github.com/go-git/go-git/v5/plumbing/object"
 	"github.com/osmcp/osmcp/docs/contracts/cross_cutting"
 	contracts_phase1 "github.com/osmcp/osmcp/docs/contracts/phase-1"
+	"encoding/json"
+	"github.com/mark3labs/mcp-go/mcp"
+	"github.com/mark3labs/mcp-go/server"
+
 )
 
 type gitDiffTool struct {
@@ -192,4 +197,48 @@ func (s *singleFilePatch) FilePatches() []diff.FilePatch {
 
 func (s *singleFilePatch) Message() string {
     return ""
+}
+
+
+func (t *gitDiffTool) RegisterMCP(s *server.MCPServer) {
+	mcpTool := mcp.NewTool("git_diff",
+		mcp.WithDescription(t.Description()),
+		mcp.WithString("path",
+			mcp.Required(),
+			mcp.Description("Absolute path to the repository root."),
+		),
+		mcp.WithString("file",
+			mcp.Description("Optional. Relative file path to restrict the diff to a single file."),
+		),
+		mcp.WithString("from_commit",
+			mcp.Description("Optional. Starting commit hash (defaults to HEAD~1)."),
+		),
+		mcp.WithString("to_commit",
+			mcp.Description("Optional. Ending commit hash (defaults to HEAD)."),
+		),
+	)
+	s.AddTool(mcpTool, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+		args := contracts_phase1.GitDiffArgs{}
+		argsMap, ok := request.Params.Arguments.(map[string]interface{})
+		if ok {
+			if path, ok := argsMap["path"].(string); ok {
+				args.Path = path
+			}
+			if file, ok := argsMap["file"].(string); ok {
+				args.File = &file
+			}
+			if fromCommit, ok := argsMap["from_commit"].(string); ok {
+				args.FromCommit = &fromCommit
+			}
+			if toCommit, ok := argsMap["to_commit"].(string); ok {
+				args.ToCommit = &toCommit
+			}
+		}
+		envelope := t.Execute(ctx, args)
+		resBytes, err := json.Marshal(envelope)
+		if err != nil {
+			return mcp.NewToolResultError(fmt.Sprintf("failed to serialize response: %v", err)), nil
+		}
+		return mcp.NewToolResultText(string(resBytes)), nil
+	})
 }

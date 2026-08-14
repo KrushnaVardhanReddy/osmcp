@@ -2,6 +2,10 @@ package tools
 
 import (
 	"context"
+	"fmt"
+	"encoding/json"
+	"github.com/mark3labs/mcp-go/mcp"
+	"github.com/mark3labs/mcp-go/server"
 	"os"
 	"path/filepath"
 	"time"
@@ -75,4 +79,33 @@ func (t *statTool) Execute(ctx context.Context, args contracts_phase1.StatArgs) 
 
 	meta.ExecutionTimeMs = time.Since(start).Milliseconds()
 	return t.builder.Success(t.Name(), data, meta)
+}
+
+func (t *statTool) RegisterMCP(s *server.MCPServer) {
+	mcpTool := mcp.NewTool("stat",
+		mcp.WithDescription(t.Description()),
+		mcp.WithString("path",
+			mcp.Required(),
+			mcp.Description("Absolute path to the file or directory."),
+		),
+	)
+
+	s.AddTool(mcpTool, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+		args := contracts_phase1.StatArgs{}
+
+		argsMap, ok := request.Params.Arguments.(map[string]interface{})
+		if ok {
+			if path, ok := argsMap["path"].(string); ok {
+				args.Path = path
+			}
+		}
+
+		envelope := t.Execute(ctx, args)
+		resBytes, err := json.Marshal(envelope)
+		if err != nil {
+			return mcp.NewToolResultError(fmt.Sprintf("failed to serialize response: %v", err)), nil
+		}
+
+		return mcp.NewToolResultText(string(resBytes)), nil
+	})
 }

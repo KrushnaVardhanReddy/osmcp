@@ -11,6 +11,8 @@ package contracts
 import (
 	"context"
 	"time"
+
+	"github.com/mark3labs/mcp-go/server"
 )
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -124,6 +126,9 @@ type Tool interface {
 	// IsMutating returns true if this tool modifies filesystem or git state.
 	// Used by PolicyEngine.Evaluate.
 	IsMutating() bool
+
+	// RegisterMCP defines the JSON-RPC schema and registers the tool execution handler with the MCP server.
+	RegisterMCP(s *server.MCPServer)
 }
 
 // ToolRegistry manages the set of tools registered with the MCP server.

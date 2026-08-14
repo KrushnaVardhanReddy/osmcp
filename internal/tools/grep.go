@@ -2,7 +2,10 @@ package tools
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"github.com/mark3labs/mcp-go/mcp"
+	"github.com/mark3labs/mcp-go/server"
 	"os"
 	"path/filepath"
 	"strings"
@@ -248,4 +251,88 @@ func getContextLines(filename string, lineNum int, contextLines int) ([]string, 
 	}
 
 	return cb, ca
+}
+
+func (t *grepTool) RegisterMCP(s *server.MCPServer) {
+	mcpTool := mcp.NewTool("grep",
+		mcp.WithDescription(t.Description()),
+		mcp.WithString("pattern",
+			mcp.Required(),
+			mcp.Description("Search pattern. Treated as a regex unless literal=true."),
+		),
+		mcp.WithString("path",
+			mcp.Required(),
+			mcp.Description("Absolute path to file or directory."),
+		),
+		mcp.WithBoolean("recursive",
+			mcp.Description("Search subdirectories recursively."),
+		),
+		mcp.WithBoolean("case_sensitive",
+			mcp.Description("Case-sensitive search."),
+		),
+		mcp.WithBoolean("literal",
+			mcp.Description("Treat pattern as a fixed string (not regex)."),
+		),
+		mcp.WithNumber("context_lines",
+			mcp.Description("Lines of context around each match."),
+		),
+		mcp.WithString("include",
+			mcp.Description("Glob to restrict searched files. e.g. '*.go'"),
+		),
+		mcp.WithString("exclude",
+			mcp.Description("Glob to exclude files from search."),
+		),
+		mcp.WithNumber("max_matches",
+			mcp.Description("Override policy max_matches for this call."),
+		),
+	)
+
+	s.AddTool(mcpTool, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+		args := contracts_phase1.GrepArgs{
+			Recursive:     true,
+			CaseSensitive: true,
+			Literal:       false,
+			ContextLines:  0,
+		}
+
+		// Parse arguments manually
+		argsMap, ok := request.Params.Arguments.(map[string]interface{})
+		if ok {
+			if pat, ok := argsMap["pattern"].(string); ok {
+				args.Pattern = pat
+			}
+			if path, ok := argsMap["path"].(string); ok {
+				args.Path = path
+			}
+			if rec, ok := argsMap["recursive"].(bool); ok {
+				args.Recursive = rec
+			}
+			if caseSens, ok := argsMap["case_sensitive"].(bool); ok {
+				args.CaseSensitive = caseSens
+			}
+			if literal, ok := argsMap["literal"].(bool); ok {
+				args.Literal = literal
+			}
+			if cl, ok := argsMap["context_lines"].(float64); ok {
+				args.ContextLines = int(cl)
+			}
+			if inc, ok := argsMap["include"].(string); ok {
+				args.Include = inc
+			}
+			if exc, ok := argsMap["exclude"].(string); ok {
+				args.Exclude = exc
+			}
+			if max, ok := argsMap["max_matches"].(float64); ok {
+				args.MaxMatches = int(max)
+			}
+		}
+
+		envelope := t.Execute(ctx, args)
+		resBytes, err := json.Marshal(envelope)
+		if err != nil {
+			return mcp.NewToolResultError(fmt.Sprintf("failed to serialize response: %v", err)), nil
+		}
+
+		return mcp.NewToolResultText(string(resBytes)), nil
+	})
 }

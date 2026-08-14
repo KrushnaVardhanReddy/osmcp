@@ -18,7 +18,7 @@ import (
 func TestGitLog_Success(t *testing.T) {
 	repoDir := setupTestGitRepo(t)
 	builder := response.NewBuilder()
-	policy := &mockPolicyEngine{allowed: true}
+	policy := &mockGitPolicyEngine{allowed: true}
 
 	// Add second commit
 	repo, err := git.PlainOpen(repoDir)
@@ -67,9 +67,9 @@ func TestGitLog_Truncation(t *testing.T) {
 	builder := response.NewBuilder()
 
 	// Set policy limit to 1
-	policy := &mockPolicyEngine{
-		allowed: true,
-		limits:  contracts.PolicyLimits{MaxMatches: 1}, // Cap at 1
+	policy := &mockGitPolicyEngine{
+		allowed:   true,
+		limits:    contracts.PolicyLimits{MaxMatches: 1}, // Cap at 1
 		limitsSet: true,
 	}
 
@@ -106,7 +106,7 @@ func TestGitLog_Truncation(t *testing.T) {
 func TestGitLog_FileFilter(t *testing.T) {
 	repoDir := setupTestGitRepo(t)
 	builder := response.NewBuilder()
-	policy := &mockPolicyEngine{allowed: true}
+	policy := &mockGitPolicyEngine{allowed: true}
 
 	repo, err := git.PlainOpen(repoDir)
 	assert.NoError(t, err)

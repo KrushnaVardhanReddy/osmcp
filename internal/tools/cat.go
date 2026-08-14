@@ -3,6 +3,10 @@ package tools
 import (
 	"bufio"
 	"context"
+	"fmt"
+	"encoding/json"
+	"github.com/mark3labs/mcp-go/mcp"
+	"github.com/mark3labs/mcp-go/server"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -179,4 +183,48 @@ func (t *catTool) Execute(ctx context.Context, args contracts_phase1.CatArgs) co
 	}
 
 	return t.builder.Success(t.Name(), data, meta)
+}
+
+func (t *catTool) RegisterMCP(s *server.MCPServer) {
+	mcpTool := mcp.NewTool("cat",
+		mcp.WithDescription(t.Description()),
+		mcp.WithString("path",
+			mcp.Required(),
+			mcp.Description("Absolute path to the file to read."),
+		),
+		mcp.WithNumber("start_line",
+			mcp.Description("Line number to start reading from (1-indexed)."),
+		),
+		mcp.WithNumber("end_line",
+			mcp.Description("Line number to stop reading at (inclusive). If omitted, reads to EOF."),
+		),
+	)
+
+	s.AddTool(mcpTool, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+		args := contracts_phase1.CatArgs{
+			StartLine: 1,
+		}
+
+		argsMap, ok := request.Params.Arguments.(map[string]interface{})
+		if ok {
+			if path, ok := argsMap["path"].(string); ok {
+				args.Path = path
+			}
+			if sl, ok := argsMap["start_line"].(float64); ok {
+				args.StartLine = int(sl)
+			}
+			if el, ok := argsMap["end_line"].(float64); ok {
+				val := int(el)
+				args.EndLine = &val
+			}
+		}
+
+		envelope := t.Execute(ctx, args)
+		resBytes, err := json.Marshal(envelope)
+		if err != nil {
+			return mcp.NewToolResultError(fmt.Sprintf("failed to serialize response: %v", err)), nil
+		}
+
+		return mcp.NewToolResultText(string(resBytes)), nil
+	})
 }

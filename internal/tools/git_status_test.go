@@ -42,21 +42,21 @@ func setupTestGitRepo(t *testing.T) string {
 	return tmpDir
 }
 
-type mockPolicyEngine struct {
-	allowed bool
-	limits  contracts.PolicyLimits
+type mockGitPolicyEngine struct {
+	allowed   bool
+	limits    contracts.PolicyLimits
 	limitsSet bool
 }
 
-func (m *mockPolicyEngine) Evaluate(ctx context.Context, toolName string, pathArgs []string, isMutating bool) error {
+func (m *mockGitPolicyEngine) Evaluate(ctx context.Context, toolName string, pathArgs []string, isMutating bool) error {
 	if !m.allowed {
 		return &contracts.PolicyError{Reason: "denied"}
 	}
 	return nil
 }
 
-func (m *mockPolicyEngine) IsToolVisible(toolName string) bool { return true }
-func (m *mockPolicyEngine) Limits() contracts.PolicyLimits {
+func (m *mockGitPolicyEngine) IsToolVisible(toolName string) bool { return true }
+func (m *mockGitPolicyEngine) Limits() contracts.PolicyLimits {
 	if !m.limitsSet {
 		return contracts.PolicyLimits{MaxOutputBytes: 1024, MaxMatches: 10}
 	}
@@ -66,7 +66,7 @@ func (m *mockPolicyEngine) Limits() contracts.PolicyLimits {
 func TestGitStatus_Clean(t *testing.T) {
 	repoDir := setupTestGitRepo(t)
 	builder := response.NewBuilder()
-	policy := &mockPolicyEngine{allowed: true}
+	policy := &mockGitPolicyEngine{allowed: true}
 
 	tool := NewGitStatusTool(policy, builder)
 
@@ -99,7 +99,7 @@ func TestGitStatus_Unclean(t *testing.T) {
 	assert.NoError(t, err)
 
 	builder := response.NewBuilder()
-	policy := &mockPolicyEngine{allowed: true}
+	policy := &mockGitPolicyEngine{allowed: true}
 
 	tool := NewGitStatusTool(policy, builder)
 
@@ -127,7 +127,7 @@ func TestGitStatus_Unclean(t *testing.T) {
 func TestGitStatus_PolicyDenied(t *testing.T) {
 	repoDir := setupTestGitRepo(t)
 	builder := response.NewBuilder()
-	policy := &mockPolicyEngine{allowed: false}
+	policy := &mockGitPolicyEngine{allowed: false}
 
 	tool := NewGitStatusTool(policy, builder)
 
@@ -146,7 +146,7 @@ func TestGitStatus_PolicyDenied(t *testing.T) {
 func TestGitStatus_NotRepo(t *testing.T) {
 	tmpDir := t.TempDir() // Empty dir, not a repo
 	builder := response.NewBuilder()
-	policy := &mockPolicyEngine{allowed: true}
+	policy := &mockGitPolicyEngine{allowed: true}
 
 	tool := NewGitStatusTool(policy, builder)
 

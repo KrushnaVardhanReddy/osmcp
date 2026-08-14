@@ -2,6 +2,7 @@ package tools
 
 import (
 	"context"
+	"fmt"
 	"path/filepath"
 	"time"
 
@@ -10,6 +11,10 @@ import (
 	"github.com/go-git/go-git/v5/plumbing/object"
 	"github.com/osmcp/osmcp/docs/contracts/cross_cutting"
 	contracts_phase1 "github.com/osmcp/osmcp/docs/contracts/phase-1"
+	"encoding/json"
+	"github.com/mark3labs/mcp-go/mcp"
+	"github.com/mark3labs/mcp-go/server"
+
 )
 
 type gitLogTool struct {
@@ -130,5 +135,50 @@ func (t *gitLogTool) Execute(ctx context.Context, args contracts_phase1.GitLogAr
 	return t.builder.Success(t.Name(), data, contracts.Meta{
 		ExecutionTimeMs: time.Since(start).Milliseconds(),
 		Truncated:       truncated,
+	})
+}
+
+func (t *gitLogTool) RegisterMCP(s *server.MCPServer) {
+	mcpTool := mcp.NewTool("git_log",
+		mcp.WithDescription(t.Description()),
+		mcp.WithString("path",
+			mcp.Required(),
+			mcp.Description("Absolute path to the repository root."),
+		),
+		mcp.WithNumber("max_commits",
+			mcp.Description("Maximum number of commits to return. (default: 20)"),
+		),
+		mcp.WithString("file",
+			mcp.Description("Optional. If set, only return commits that touched this file path."),
+		),
+		mcp.WithString("branch",
+			mcp.Description("Optional. Branch to read history from (defaults to current HEAD)."),
+		),
+	)
+	s.AddTool(mcpTool, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+		args := contracts_phase1.GitLogArgs{
+			MaxCommits: 20,
+		}
+		argsMap, ok := request.Params.Arguments.(map[string]interface{})
+		if ok {
+			if path, ok := argsMap["path"].(string); ok {
+				args.Path = path
+			}
+			if maxCommits, ok := argsMap["max_commits"].(float64); ok {
+				args.MaxCommits = int(maxCommits)
+			}
+			if file, ok := argsMap["file"].(string); ok {
+				args.File = &file
+			}
+			if branch, ok := argsMap["branch"].(string); ok {
+				args.Branch = &branch
+			}
+		}
+		envelope := t.Execute(ctx, args)
+		resBytes, err := json.Marshal(envelope)
+		if err != nil {
+			return mcp.NewToolResultError(fmt.Sprintf("failed to serialize response: %v", err)), nil
+		}
+		return mcp.NewToolResultText(string(resBytes)), nil
 	})
 }

@@ -18,7 +18,7 @@ import (
 func TestGitDiff_Success(t *testing.T) {
 	repoDir := setupTestGitRepo(t) // From git_status_test.go
 	builder := response.NewBuilder()
-	policy := &mockPolicyEngine{allowed: true}
+	policy := &mockGitPolicyEngine{allowed: true}
 
 	// Make a second commit to diff against
 	repo, err := git.PlainOpen(repoDir)
@@ -65,7 +65,7 @@ func TestGitDiff_Success(t *testing.T) {
 func TestGitDiff_InvalidCommit(t *testing.T) {
 	repoDir := setupTestGitRepo(t)
 	builder := response.NewBuilder()
-	policy := &mockPolicyEngine{allowed: true}
+	policy := &mockGitPolicyEngine{allowed: true}
 
 	tool := NewGitDiffTool(policy, builder)
 
@@ -87,9 +87,9 @@ func TestGitDiff_Truncation(t *testing.T) {
 	repoDir := setupTestGitRepo(t)
 	builder := response.NewBuilder()
 	// Set very small max bytes
-	policy := &mockPolicyEngine{
-		allowed: true,
-		limits:  contracts.PolicyLimits{MaxOutputBytes: 10, MaxMatches: 10},
+	policy := &mockGitPolicyEngine{
+		allowed:   true,
+		limits:    contracts.PolicyLimits{MaxOutputBytes: 10, MaxMatches: 10},
 		limitsSet: true,
 	}
 

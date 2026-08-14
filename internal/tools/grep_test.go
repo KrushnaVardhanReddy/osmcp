@@ -2,9 +2,9 @@ package tools
 
 import (
 	"context"
+	"os"
 	"path/filepath"
 	"testing"
-	"os"
 
 	"github.com/osmcp/osmcp/docs/contracts/cross_cutting"
 	contracts_phase1 "github.com/osmcp/osmcp/docs/contracts/phase-1"
@@ -158,15 +158,15 @@ func TestGrepTool_INV_06_EmptyPattern(t *testing.T) {
 }
 
 func TestGrepTool_INV_07_Timeout(t *testing.T) {
-    // Timeout is tested by enforcing a very strict timeout policy
-    // and using a slow context, or by mocking it, but since no mocks:
-    p := &policy.Policy{
+	// Timeout is tested by enforcing a very strict timeout policy
+	// and using a slow context, or by mocking it, but since no mocks:
+	p := &policy.Policy{
 		PolicyConfig: policy.PolicySection{
 			AllowedRoot:  getFixturesDir(),
 			AllowedTools: []string{"grep"},
 		},
 		Limits: policy.LimitsSection{
-			TimeoutMs:      1, // 1 ms
+			TimeoutMs: 1, // 1 ms
 		},
 	}
 	logger := audit.NewLoggerWithWriter(os.Stderr)
@@ -179,11 +179,11 @@ func TestGrepTool_INV_07_Timeout(t *testing.T) {
 		Path:    getFixturesDir(), // scanning dir might take > 1ms
 	}
 
-    // A fast system might still pass this within 1ms.
-    // We can simulate timeout by passing a canceled context or just accepting if it fails or succeeds,
-    // but the spec says "Timeout simulation -> TIMEOUT".
-    ctx, cancel := context.WithCancel(context.Background())
-    cancel()
+	// A fast system might still pass this within 1ms.
+	// We can simulate timeout by passing a canceled context or just accepting if it fails or succeeds,
+	// but the spec says "Timeout simulation -> TIMEOUT".
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
 
 	env := gt.(interface {
 		Execute(context.Context, contracts_phase1.GrepArgs) contracts.Envelope
