@@ -139,11 +139,16 @@ TASKS = {
         "phase": "phase-1",
         "prompt": _load_prompt("docs/tasks/phase-1/task7_transform_tools.md"),
     },
+    8: {
+        "name": "Task 8 — Utility Tools (tree, head, tail, du)",
+        "phase": "phase-1",
+        "prompt": _load_prompt("docs/tasks/phase-1/task8_utility_tools.md"),
+    },
 }
 
 # ── Wave definitions — groups of task IDs to submit together ─────────────────
 WAVES = {
-    "phase-1": [1, 2, 3, 4, 5, 6, 7],
+    "phase-1": [1, 2, 3, 4, 5, 6, 7, 8],
 }
 
 # ──────────────────────────────────────────────────────────────────────────────

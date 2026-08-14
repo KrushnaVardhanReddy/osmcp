@@ -13,3 +13,4 @@ This file tracks the status of all Jules tasks and the corresponding Jules sessi
 | [Task 5: Git Intelligence](./phase-1/task5_git_tools.md) | Pending | | |
 | [Task 6: find Tool](./phase-1/task6_find.md) | Pending | | |
 | [Task 7: Transform Tools (jq, sed, diff)](./phase-1/task7_transform_tools.md) | Pending | | |
+| [Task 8: Utility Tools (tree, head, tail, du)](./phase-1/task8_utility_tools.md) | Pending | | |
