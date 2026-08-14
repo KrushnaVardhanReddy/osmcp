@@ -77,11 +77,19 @@ func main() {
 	grepTool := tools.NewGrepTool(policyEngine, envelopeBuilder)
 	toolRegistry.Register(grepTool)
 
+	gitStatusTool := tools.NewGitStatusTool(policyEngine, envelopeBuilder)
+	toolRegistry.Register(gitStatusTool)
+
+	gitDiffTool := tools.NewGitDiffTool(policyEngine, envelopeBuilder)
+	toolRegistry.Register(gitDiffTool)
+
+	gitLogTool := tools.NewGitLogTool(policyEngine, envelopeBuilder)
+	toolRegistry.Register(gitLogTool)
+
 	s := server.NewMCPServer("osmcp", "0.1.0", server.WithToolCapabilities(true))
 
 	visibleTools := toolRegistry.VisibleTools()
 	for _, t := range visibleTools {
-		// Only grep is implemented right now
 		if t.Name() == "grep" {
 			gt := t.(interface {
 				Execute(context.Context, contracts_phase1.GrepArgs) contracts.Envelope
@@ -166,6 +174,122 @@ func main() {
 					return mcp.NewToolResultError(fmt.Sprintf("failed to serialize response: %v", err)), nil
 				}
 
+				return mcp.NewToolResultText(string(resBytes)), nil
+			})
+		} else if t.Name() == "git_status" {
+			gt := t.(interface {
+				Execute(context.Context, contracts_phase1.GitStatusArgs) contracts.Envelope
+			})
+			mcpTool := mcp.NewTool("git_status",
+				mcp.WithDescription(t.Description()),
+				mcp.WithString("path",
+					mcp.Required(),
+					mcp.Description("Absolute path to the repository root (or any subdirectory within it)."),
+				),
+			)
+			s.AddTool(mcpTool, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+				args := contracts_phase1.GitStatusArgs{}
+				argsMap, ok := request.Params.Arguments.(map[string]interface{})
+				if ok {
+					if path, ok := argsMap["path"].(string); ok {
+						args.Path = path
+					}
+				}
+				envelope := gt.Execute(ctx, args)
+				resBytes, err := json.Marshal(envelope)
+				if err != nil {
+					return mcp.NewToolResultError(fmt.Sprintf("failed to serialize response: %v", err)), nil
+				}
+				return mcp.NewToolResultText(string(resBytes)), nil
+			})
+		} else if t.Name() == "git_diff" {
+			gt := t.(interface {
+				Execute(context.Context, contracts_phase1.GitDiffArgs) contracts.Envelope
+			})
+			mcpTool := mcp.NewTool("git_diff",
+				mcp.WithDescription(t.Description()),
+				mcp.WithString("path",
+					mcp.Required(),
+					mcp.Description("Absolute path to the repository root."),
+				),
+				mcp.WithString("file",
+					mcp.Description("Optional. Relative file path to restrict the diff to a single file."),
+				),
+				mcp.WithString("from_commit",
+					mcp.Description("Optional. Starting commit hash (defaults to HEAD~1)."),
+				),
+				mcp.WithString("to_commit",
+					mcp.Description("Optional. Ending commit hash (defaults to HEAD)."),
+				),
+			)
+			s.AddTool(mcpTool, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+				args := contracts_phase1.GitDiffArgs{}
+				argsMap, ok := request.Params.Arguments.(map[string]interface{})
+				if ok {
+					if path, ok := argsMap["path"].(string); ok {
+						args.Path = path
+					}
+					if file, ok := argsMap["file"].(string); ok {
+						args.File = &file
+					}
+					if fromCommit, ok := argsMap["from_commit"].(string); ok {
+						args.FromCommit = &fromCommit
+					}
+					if toCommit, ok := argsMap["to_commit"].(string); ok {
+						args.ToCommit = &toCommit
+					}
+				}
+				envelope := gt.Execute(ctx, args)
+				resBytes, err := json.Marshal(envelope)
+				if err != nil {
+					return mcp.NewToolResultError(fmt.Sprintf("failed to serialize response: %v", err)), nil
+				}
+				return mcp.NewToolResultText(string(resBytes)), nil
+			})
+		} else if t.Name() == "git_log" {
+			gt := t.(interface {
+				Execute(context.Context, contracts_phase1.GitLogArgs) contracts.Envelope
+			})
+			mcpTool := mcp.NewTool("git_log",
+				mcp.WithDescription(t.Description()),
+				mcp.WithString("path",
+					mcp.Required(),
+					mcp.Description("Absolute path to the repository root."),
+				),
+				mcp.WithNumber("max_commits",
+					mcp.Description("Maximum number of commits to return. (default: 20)"),
+				),
+				mcp.WithString("file",
+					mcp.Description("Optional. If set, only return commits that touched this file path."),
+				),
+				mcp.WithString("branch",
+					mcp.Description("Optional. Branch to read history from (defaults to current HEAD)."),
+				),
+			)
+			s.AddTool(mcpTool, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+				args := contracts_phase1.GitLogArgs{
+					MaxCommits: 20,
+				}
+				argsMap, ok := request.Params.Arguments.(map[string]interface{})
+				if ok {
+					if path, ok := argsMap["path"].(string); ok {
+						args.Path = path
+					}
+					if maxCommits, ok := argsMap["max_commits"].(float64); ok {
+						args.MaxCommits = int(maxCommits)
+					}
+					if file, ok := argsMap["file"].(string); ok {
+						args.File = &file
+					}
+					if branch, ok := argsMap["branch"].(string); ok {
+						args.Branch = &branch
+					}
+				}
+				envelope := gt.Execute(ctx, args)
+				resBytes, err := json.Marshal(envelope)
+				if err != nil {
+					return mcp.NewToolResultError(fmt.Sprintf("failed to serialize response: %v", err)), nil
+				}
 				return mcp.NewToolResultText(string(resBytes)), nil
 			})
 		}
