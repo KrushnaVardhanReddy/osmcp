@@ -79,31 +79,22 @@ grep
 
 ## 4. Execution
 
-The tool executes `grep` directly via `os/exec` with `shell: false`. Arguments are built
-from the schema fields — no shell string interpolation at any point.
+The tool executes the search natively in pure Go using the `github.com/tanqiangyes/grep-go` library. There is no `os/exec` call and no dependency on a host `grep` binary.
 
-### Argument construction
+### Argument Mapping
 
-```
-grep
-  [-r]                         if recursive=true and path is a directory
-  [-i]                         if case_sensitive=false
-  [-F]                         if literal=true
-  [-C <context_lines>]         if context_lines > 0
-  [--include=<include>]        if include is set
-  [--exclude=<exclude>]        if exclude is set
-  [-m <max_matches>]           always set to min(args.max_matches, policy.max_matches)
-  --line-number
-  --with-filename
-  --null                       (to safely handle filenames with special chars)
-  -- <pattern> <path>          pattern and path always come last, separated by --
-```
+The schema arguments must be mapped to the library's struct/options (e.g. `grep.Options`):
+- `recursive=true` → `opts.Recursive`
+- `case_sensitive=false` → `opts.IgnoreCase`
+- `literal=true` → `opts.FixedStrings`
+- `context_lines` → `opts.Context` (or `opts.BeforeContext`/`opts.AfterContext`)
+- `include` / `exclude` → mapped to the library's file matching logic.
+- `max_matches` → enforced during the matching iteration; stop matching when `min(args.max_matches, policy.max_matches)` is reached.
 
-### PATH resolution
-
-The `grep` binary is resolved from the OS `PATH` at server startup. If `grep` is not
-found, osmcp exits with a clear error message. The resolved path is stored and used for
-all subsequent calls.
+### Advantages
+- Completely cross-platform (Windows, macOS, Linux).
+- No shell injection surface whatsoever.
+- Eliminates GNU vs BSD `grep` flag discrepancies.
 
 ---
 

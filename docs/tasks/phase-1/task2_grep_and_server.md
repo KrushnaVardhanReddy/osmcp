@@ -34,12 +34,10 @@ File: `internal/tools/grep.go`
 2. Call `PolicyEngine.Evaluate("grep", []string{args.Path}, false)`.
    On error → return `POLICY_DENIED` envelope.
 3. Check path exists: `os.Stat(args.Path)`. If missing → `NOT_FOUND`.
-4. Build `ExecOptions` from args:
-   - Resolve `grep` binary path at tool registration time (not per-call).
-   - Build argv array per spec §4. No shell string interpolation.
+4. Configure `grep-go` options based on `GrepArgs` (see spec §4).
    - Set `MaxMatches = min(args.MaxMatches, policy.Limits().MaxMatches)` (0 means use policy limit).
-5. Call `Executor.Run(ctx, opts)`.
-6. Parse stdout into `[]GrepMatch` (format: `file\0line:text`).
+5. Call the `grep-go` library to execute the search in pure Go (no `os/exec`).
+6. Translate the library's match results into `[]GrepMatch`.
 7. Return `EnvelopeBuilder.Success(...)` or `EnvelopeBuilder.Failure(...)`.
 
 **Truncation:** Stop parsing at `MaxMatches`. Set `meta.Truncated = true`.

@@ -38,14 +38,14 @@ The long-term goal is not to wrap Unix commands. The goal is to provide a reliab
 
 ### Architecture layers
 
-- **Typed Tools** — each common operation (grep, sed, git status, etc.) is exposed as its own MCP tool with a proper JSON schema. No shell string parsing; arguments go straight to argv.
-- **Policy Engine** — the central gate. Decides which capabilities an agent has access to (which tools are even visible), and enforces boundaries per call: allowed paths, allowed commands, resource limits, mutation permissions. Declarative rules (config-driven) rather than scattered checks inside individual tools.
-- **Execution Engine** — actually runs the operation via `exec()` with `shell:false` (no injection surface), returning structured results (e.g. `{matches: [...], count: N}`) instead of raw stdout blobs.
+- **Typed Tools** — each common operation (grep, sed, git status, etc.) is exposed as its own MCP tool with a proper JSON schema. **All Tier 1 tools are implemented in Pure Go** (either via stdlib or mature third-party Go libraries like `gojq` or `go-git`). This guarantees true cross-platform portability without depending on host OS binaries (GNU vs BSD differences).
+- **Policy Engine** — the central gate. Decides which capabilities an agent has access to (which tools are even visible), and enforces boundaries per call: allowed paths, resource limits, mutation permissions.
+- **Execution Engine** — reserved strictly for the v2 `run_script` tool. Runs arbitrary shell scripts via `exec()` with `shell:false` and deep sandboxing.
 
 ### Two tiers of tools
 
 **Tier 1 — Typed Tools**
-Structured, schema-defined tools covering the common 90% of file/text/git operations. Safe by construction — no shell parsing, typed args, structured results.
+Structured, schema-defined tools covering the common 90% of file/text/git operations. Safe by construction — implemented natively in Go, typed args, structured results. No subprocess execution vulnerabilities.
 
 **Tier 2 — `run_script` (restricted execution capability)**
 Accepts a full shell script body (bash/sh) for pipelines and anything not covered by Tier 1 (e.g. `grep -l TODO **/*.py | xargs wc -l | sort -n`). Still gated by the Policy Engine and sandboxed via:
@@ -59,8 +59,7 @@ Blocklisting dangerous patterns is treated as a weak secondary defense — the r
 ### Why Go
 
 - Official MCP SDKs exist for Go with solid stdio/JSON-RPC transport support.
-- Compiles to a single static binary per platform — trivial Homebrew formula, zero runtime dependencies (no Python/Node required).
-- `os/exec` supports safe subprocess execution by default (argv arrays, not shell strings).
+- Compiles to a single static binary per platform — trivial Homebrew formula, zero runtime dependencies. Because tools are implemented natively in Go, the binary doesn't even depend on the host having `grep`, `git`, or `jq` installed.
 - Goroutines make per-call timeouts and cancellation (needed for `run_script`) straightforward.
 
 Rust remains a solid alternative if deeper OS-level sandboxing (seccomp, Linux namespaces, landlock) becomes a priority later — but that would be a rewrite of the execution layer only, not the whole tool surface.

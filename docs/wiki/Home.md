@@ -27,6 +27,7 @@ osmcp --policy ~/.config/osmcp/policy.toml
 
 1. **Typed over raw** — structured tool arguments, not shell strings
 2. **Capability-based visibility** — agents only see what policy grants
-3. **Uniform response** — one JSON envelope shape for every tool, always
-4. **Fail closed** — deny by default, explicit grants required
-5. **Spec-first** — contracts and specs written before implementation
+3. **Pure Go Tier 1** — typed tools are built in pure Go (stdlib/libs) for zero dependencies and absolute cross-platform portability. `os/exec` is reserved for v2 `run_script`.
+4. **Uniform response** — one JSON envelope shape for every tool, always
+5. **Fail closed** — deny by default, explicit grants required
+6. **Spec-first** — contracts and specs written before implementation
