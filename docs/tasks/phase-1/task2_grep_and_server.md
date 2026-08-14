@@ -64,10 +64,9 @@ File: `cmd/osmcp/main.go`
 4. If --validate: run policy.Validate(), print report, exit 0/1
 5. Initialize AuditLogger
 6. Initialize PolicyEngine with loaded policy and AuditLogger
-7. Initialize Executor
-8. Initialize EnvelopeBuilder
-9. Build ToolRegistry; register GrepTool
-10. Create MCP server:
+7. Initialize EnvelopeBuilder
+8. Build ToolRegistry; register GrepTool
+9. Create MCP server:
     server := mcp.NewServer(&mcp.Implementation{Name: "osmcp", Version: "0.1.0"}, nil)
 11. For each tool in registry.VisibleTools(): register with MCP server
 12. server.Run(ctx, &mcp.StdioTransport{})

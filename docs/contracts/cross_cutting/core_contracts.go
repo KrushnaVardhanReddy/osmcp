@@ -106,43 +106,7 @@ type PolicyError struct {
 
 func (e *PolicyError) Error() string { return e.Reason }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Execution Engine
-// ─────────────────────────────────────────────────────────────────────────────
 
-// Executor runs OS commands with safety guarantees:
-//   - shell: false — args go directly to argv, no shell string parsing
-//   - Per-call timeout via context cancellation
-//   - Output capped to policy limits
-//
-// Spec: docs/specs/cross_cutting/02_policy_engine_spec.md §3 (limits)
-type Executor interface {
-	// Run executes the given binary with the given arguments.
-	// It is the caller's responsibility to have already passed PolicyEngine.Evaluate.
-	//
-	// Returns the collected stdout, stderr, whether output was truncated, and any error.
-	// If the context deadline is exceeded, error wraps ErrTimeout.
-	Run(ctx context.Context, opts ExecOptions) ExecResult
-}
-
-// ExecOptions configures a single command execution.
-type ExecOptions struct {
-	Binary     string        // Absolute path to the binary (resolved at startup)
-	Args       []string      // Arguments passed directly to argv (no shell interpretation)
-	WorkingDir string        // Must be within policy.AllowedRoot
-	Timeout    time.Duration // Sourced from PolicyLimits.TimeoutMs
-	MaxOutput  int64         // Sourced from PolicyLimits.MaxOutputBytes
-}
-
-// ExecResult is the structured result of a command execution.
-type ExecResult struct {
-	Stdout    []byte
-	Stderr    []byte
-	Truncated bool
-	TimedOut  bool
-	ExitCode  int
-	Err       error // Non-nil only for launch failures (binary not found, etc.)
-}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Tool
