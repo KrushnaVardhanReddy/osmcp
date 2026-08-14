@@ -124,11 +124,16 @@ TASKS = {
         "phase": "phase-1",
         "prompt": _load_prompt("docs/tasks/phase-1/task4_file_inspection.md"),
     },
+    5: {
+        "name": "Task 5 — Git Intelligence (git_status, git_diff, git_log)",
+        "phase": "phase-1",
+        "prompt": _load_prompt("docs/tasks/phase-1/task5_git_tools.md"),
+    },
 }
 
 # ── Wave definitions — groups of task IDs to submit together ─────────────────
 WAVES = {
-    "phase-1": [1, 2, 3, 4],
+    "phase-1": [1, 2, 3, 4, 5],
 }
 
 # ──────────────────────────────────────────────────────────────────────────────
