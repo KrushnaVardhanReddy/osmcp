@@ -70,8 +70,11 @@ func main() {
 	envelopeBuilder := response.NewBuilder()
 	toolRegistry := tools.NewRegistry(policyEngine)
 
-	grepTool := tools.NewGrepTool(policyEngine, envelopeBuilder)
-	toolRegistry.Register(grepTool)
+	toolRegistry.Register(tools.NewGrepTool(policyEngine, envelopeBuilder))
+	toolRegistry.Register(tools.NewTreeTool(policyEngine, envelopeBuilder))
+	toolRegistry.Register(tools.NewHeadTool(policyEngine, envelopeBuilder))
+	toolRegistry.Register(tools.NewTailTool(policyEngine, envelopeBuilder))
+	toolRegistry.Register(tools.NewDuTool(policyEngine, envelopeBuilder))
 
 	lsTool := tools.NewLsTool(policyEngine, envelopeBuilder)
 	toolRegistry.Register(lsTool)

@@ -38,6 +38,7 @@ type AuditSection struct {
 // Known tools for validation
 var knownTools = map[string]bool{
 	"grep": true, "find": true, "ls": true, "cat": true, "head": true, "tail": true,
+	"tree": true, "du": true,
 	"wc": true, "stat": true,
 	"git_status": true, "git_diff": true, "git_log": true,
 	"sed": true, "jq": true, "diff": true,
@@ -104,6 +105,7 @@ func DefaultPolicy() *Policy {
 			AllowedRoot: cwd,
 			AllowedTools: []string{
 				"grep", "find", "ls", "cat", "head", "tail",
+				"tree", "du",
 				"wc", "stat",
 				"git_status", "git_diff", "git_log",
 				"sed", "jq", "diff",
