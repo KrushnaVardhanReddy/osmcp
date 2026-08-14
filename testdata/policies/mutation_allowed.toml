@@ -1,0 +1,19 @@
+[policy]
+allowed_root = "/home/user/myproject"
+allowed_tools = [
+  "grep", "find", "ls", "cat", "head", "tail",
+  "git_status", "git_diff", "git_log",
+  "cp", "mv", "rm", "mkdir",
+  "git_add", "git_commit", "git_branch"
+]
+allow_mutation = true
+allow_git_write = true
+allow_run_script = false
+
+[limits]
+timeout_ms = 10000
+max_output_bytes = 524288
+max_matches = 1000
+
+[audit]
+destination = "stderr"
