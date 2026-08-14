@@ -43,7 +43,7 @@ Implement the `EnvelopeBuilder` interface from `core_contracts.go`:
 ### 3. Implement `internal/policy` package
 
 File: `internal/policy/policy.go`
-- Define the `Policy` struct matching the TOML schema in spec §2.
+- Define the `Policy` struct matching the TOML schema in spec §2 (including `ReadOnlyPaths`).
 - Implement `LoadFromFile(path string) (*Policy, error)` using BurntSushi/toml.
 - Implement `Validate(*Policy) []error` — used by `--validate` CLI flag.
   Validation rules: spec §6.
@@ -53,6 +53,7 @@ File: `internal/policy/engine.go`
 - Implement `PolicyEngine` interface from `core_contracts.go`.
 - `Evaluate()` must follow the exact algorithm in spec §3 — check order matters.
 - Symlink resolution: use `filepath.EvalSymlinks` before prefix comparison.
+- `Evaluate()` must enforce `ReadOnlyPaths` if `isMutating` is true.
 - `IsToolVisible()` must check `policy.AllowedTools` (case-sensitive exact match).
 - `Limits()` returns the `PolicyLimits` from the loaded policy.
 
