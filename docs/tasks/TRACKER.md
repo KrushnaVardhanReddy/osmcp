@@ -34,7 +34,7 @@ This file tracks the status of all Jules tasks and the corresponding Jules sessi
 | Task | Status | Session URL | PR |
 |------|--------|-------------|----|
 | [Task 15: Templates & Agent Onboarding](./phase-3/task15_templates_onboarding.md) | ✅ Done | [3437501479834941722](https://jules.google.com/session/3437501479834941722) | [Merged](https://github.com/KrushnaVardhanReddy/osmcp/pull/20) |
-| [Task 16: run_script (Tier 2 Execution Engine)](./phase-3/task16_run_script.md) | 🔄 In Progress | [14231596801460455260](https://jules.google.com/session/14231596801460455260) | |
+| [Task 16: run_script (Tier 2 Execution Engine)](./phase-3/task16_run_script.md) | ✅ Done | [14231596801460455260](https://jules.google.com/session/14231596801460455260) | [Merged](https://github.com/KrushnaVardhanReddy/osmcp/commit/4c9a5b2) |
 
 ## Phase 4: System & Diagnostics
 
