@@ -1,0 +1,15 @@
+[policy]
+allowed_root = "/"
+allowed_tools = ["get_env"]
+allow_mutation = false
+allow_git_write = false
+allow_run_script = false
+env_allowlist = ["TEST_E2E_KEY", "TEST_E2E_KEY2"]
+
+[limits]
+timeout_ms = 10000
+max_output_bytes = 524288
+max_matches = 1000
+
+[audit]
+destination = "stderr"
