@@ -108,3 +108,13 @@ All tool responses follow a consistent typed envelope:
 ## License
 
 MIT
+
+## Acknowledgements
+
+`osmcp` would not be possible without the incredible open-source libraries it is built upon:
+- [mcp-go](https://github.com/mark3labs/mcp-go) for the core Model Context Protocol SDK.
+- [go-git](https://github.com/go-git/go-git) for pure Go git manipulation.
+- [gojq](https://github.com/itchyny/gojq) for pure Go JSON processing.
+- [go-gitdiff](https://github.com/bluekeyes/go-gitdiff) for parsing and applying patches.
+- [grep-go](https://github.com/tanqiangyes/grep-go) for regular expression searching.
+- [toml](https://github.com/BurntSushi/toml) for configuration parsing.

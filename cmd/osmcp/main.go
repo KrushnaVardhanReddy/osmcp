@@ -24,7 +24,7 @@ func main() {
 	flag.Parse()
 
 	if *versionFlag {
-		fmt.Println("osmcp v0.1.0")
+		fmt.Println("osmcp v1.1.0")
 		os.Exit(0)
 	}
 
@@ -131,7 +131,7 @@ func main() {
 	toolRegistry.Register(tools.NewAwkTool(policyEngine, envelopeBuilder))
 	toolRegistry.Register(tools.NewTarTool(policyEngine, envelopeBuilder))
 
-	s := server.NewMCPServer("osmcp", "0.1.0", server.WithToolCapabilities(true))
+	s := server.NewMCPServer("osmcp", "1.1.0", server.WithToolCapabilities(true))
 
 	visibleTools := toolRegistry.VisibleTools()
 	for _, t := range visibleTools {
