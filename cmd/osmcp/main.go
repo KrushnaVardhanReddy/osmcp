@@ -123,6 +123,7 @@ func main() {
 	toolRegistry.Register(tools.NewPatchTool(policyEngine, envelopeBuilder))
 	toolRegistry.Register(tools.NewSortTool(policyEngine, envelopeBuilder))
 	toolRegistry.Register(tools.NewAwkTool(policyEngine, envelopeBuilder))
+	toolRegistry.Register(tools.NewTarTool(policyEngine, envelopeBuilder))
 
 	s := server.NewMCPServer("osmcp", "0.1.0", server.WithToolCapabilities(true))
 
