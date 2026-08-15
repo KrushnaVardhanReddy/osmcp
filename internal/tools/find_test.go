@@ -304,3 +304,11 @@ func TestFindTool_NoSymlinkFollow(t *testing.T) {
 		t.Errorf("symlink should NOT be followed during walk")
 	}
 }
+
+func (m *mockFindPolicyEngine) RunScriptConfig() contracts.RunScriptConfig {
+	return contracts.RunScriptConfig{}
+}
+
+func (m *mockFindPolicyEngine) AllowedRoot() string {
+	return "/tmp/mockroot"
+}

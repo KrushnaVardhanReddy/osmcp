@@ -11,9 +11,15 @@ import (
 
 // Policy matches the TOML schema in spec §2.
 type Policy struct {
-	PolicyConfig PolicySection `toml:"policy"`
-	Limits       LimitsSection `toml:"limits"`
-	Audit        AuditSection  `toml:"audit"`
+	PolicyConfig PolicySection   `toml:"policy"`
+	RunScript    RunScriptSection `toml:"run_script"`
+	Limits       LimitsSection   `toml:"limits"`
+	Audit        AuditSection    `toml:"audit"`
+}
+
+type RunScriptSection struct {
+	BlockedBinaries []string `toml:"blocked_binaries"`
+	AllowNetwork    bool     `toml:"allow_network"`
 }
 
 type PolicySection struct {
@@ -47,6 +53,7 @@ var knownTools = map[string]bool{
 	"git_branch": true, "git_pull": true, "git_push": true, "patch": true,
 	"awk": true,
 	"tar": true,
+	"run_script": true,
 }
 
 // LoadFromFile loads and parses a Policy from a TOML file.

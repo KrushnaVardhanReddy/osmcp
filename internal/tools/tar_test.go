@@ -218,3 +218,11 @@ func toMap(req phase2.TarArgs) map[string]interface{} {
 	json.Unmarshal(b, &m)
 	return m
 }
+
+func (m *mockPolicyEngineTar) RunScriptConfig() contracts.RunScriptConfig {
+	return contracts.RunScriptConfig{}
+}
+
+func (m *mockPolicyEngineTar) AllowedRoot() string {
+	return "/tmp/mockroot"
+}

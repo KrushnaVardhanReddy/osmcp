@@ -162,3 +162,11 @@ func TestGitStatus_NotRepo(t *testing.T) {
 	assert.Equal(t, contracts.ErrExecFailed, env.Error.Code)
 	assert.Contains(t, env.Error.Message, "Not a git repository")
 }
+
+func (m *mockGitPolicyEngine) RunScriptConfig() contracts.RunScriptConfig {
+	return contracts.RunScriptConfig{}
+}
+
+func (m *mockGitPolicyEngine) AllowedRoot() string {
+	return "/tmp/mockroot"
+}

@@ -189,3 +189,11 @@ func TestCatTool(t *testing.T) {
 	// Keep the unused tool to avoid compiler error
 	_ = tool
 }
+
+func (m *mockPolicyEngineCat) RunScriptConfig() contracts.RunScriptConfig {
+	return contracts.RunScriptConfig{}
+}
+
+func (m *mockPolicyEngineCat) AllowedRoot() string {
+	return "/tmp/mockroot"
+}

@@ -227,3 +227,11 @@ func TestSortTool_Errors(t *testing.T) {
 		t.Errorf("expected INVALID_ARGS (dir), got %v", env.Error)
 	}
 }
+
+func (m *mockPolicyEngineSort) RunScriptConfig() contracts.RunScriptConfig {
+	return contracts.RunScriptConfig{}
+}
+
+func (m *mockPolicyEngineSort) AllowedRoot() string {
+	return "/tmp/mockroot"
+}

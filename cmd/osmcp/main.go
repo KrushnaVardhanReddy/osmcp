@@ -167,6 +167,9 @@ func main() {
 	toolRegistry.Register(tools.NewAwkTool(policyEngine, envelopeBuilder))
 	toolRegistry.Register(tools.NewTarTool(policyEngine, envelopeBuilder))
 
+	runScriptTool := tools.NewRunScriptTool(policyEngine, envelopeBuilder)
+	toolRegistry.Register(runScriptTool)
+
 	s := server.NewMCPServer("osmcp", version, server.WithToolCapabilities(true))
 
 	visibleTools := toolRegistry.VisibleTools()
