@@ -22,12 +22,12 @@ This file tracks the status of all Jules tasks and the corresponding Jules sessi
 |------|--------|-------------|----|
 | [Task 11: File System Mutation](./phase-2/task11_fs_mutation.md) | ✅ Done | [10666213110689900015](https://jules.google.com/session/10666213110689900015) | [PR](https://github.com/KrushnaVardhanReddy/osmcp/pull/12) |
 | [Task 12: Git Mutation](./phase-2/task12_git_mutation.md) | ✅ Done | [9239641306438609030](https://jules.google.com/session/9239641306438609030) | [Merged](https://github.com/KrushnaVardhanReddy/osmcp/pull/13) |
-| [Task 13: Patch Mutation](./phase-2/task13_patch_mutation.md) | Pending | | |
-| [Task 14: Phase 2 E2E Testing](./phase-2/task14_e2e_testing.md) | Pending | | |
+| [Task 13: Patch Mutation](./phase-2/task13_patch_mutation.md) | 🔄 In Progress | [8438355844821452775](https://jules.google.com/session/8438355844821452775) | |
 | [Task 17: sort](./phase-2/task17_sort.md) | Pending | | |
 | [Task 18: awk](./phase-2/task18_awk.md) | Pending | | |
 | [Task 19: tar](./phase-2/task19_tar.md) | Pending | | |
 | [Task 20: Built-in Filter Params (ls pattern, git_log author/since/until)](./phase-2/task20_filter_params.md) | Pending | | |
+| [Task 14: Phase 2 E2E Testing](./phase-2/task14_e2e_testing.md) | Pending | | |
 
 ## Phase 3: Templates & Agent Onboarding
 

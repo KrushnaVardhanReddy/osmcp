@@ -199,7 +199,7 @@ TASKS = {
 # ── Wave definitions — groups of task IDs to submit together ─────────────────
 WAVES = {
     "phase-1": [4, 5, 6, 7, 8, 9],
-    "phase-2": [11, 12, 13, 14, 17, 18, 19, 20],
+    "phase-2": [11, 12, 13, 17, 18, 19, 20, 14],
     "phase-3": [15, 16],
 }
 
