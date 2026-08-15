@@ -205,7 +205,9 @@ func TestE2E_GitCheckout_Success(t *testing.T) {
 	assert.NoError(t, err)
 	assert.False(t, res.IsError)
 
-	head, _ := repo.Head()
+	head, err := repo.Head()
+	assert.NoError(t, err)
+	assert.NotNil(t, head)
 	assert.Equal(t, "refs/heads/new-branch", head.Name().String())
 }
 
