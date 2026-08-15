@@ -15,6 +15,11 @@ import (
 	contracts_phase1 "github.com/osmcp/osmcp/docs/contracts/phase-1"
 )
 
+type LsArgsExtended struct {
+	contracts_phase1.LsArgs
+	Pattern string `json:"pattern,omitempty"`
+}
+
 type lsTool struct {
 	policy  contracts.PolicyEngine
 	builder contracts.EnvelopeBuilder
@@ -39,7 +44,7 @@ func (t *lsTool) IsMutating() bool {
 	return false
 }
 
-func (t *lsTool) Execute(ctx context.Context, args contracts_phase1.LsArgs) contracts.Envelope {
+func (t *lsTool) Execute(ctx context.Context, args LsArgsExtended) contracts.Envelope {
 	start := time.Now()
 	meta := contracts.Meta{
 		ExecutionTimeMs: 0,
@@ -48,6 +53,14 @@ func (t *lsTool) Execute(ctx context.Context, args contracts_phase1.LsArgs) cont
 
 	if args.Path == "" {
 		return t.builder.Failure(t.Name(), contracts.ErrInvalidArgs, "path must not be empty", false, meta)
+	}
+
+	if args.Pattern != "" {
+		_, err := filepath.Match(args.Pattern, "")
+		if err != nil {
+			meta.ExecutionTimeMs = time.Since(start).Milliseconds()
+			return t.builder.Failure(t.Name(), contracts.ErrInvalidArgs, "invalid pattern: "+err.Error(), false, meta)
+		}
 	}
 
 	resolvedPath, err := filepath.EvalSymlinks(args.Path)
@@ -87,8 +100,14 @@ func (t *lsTool) Execute(ctx context.Context, args contracts_phase1.LsArgs) cont
 
 	if !info.IsDir() {
 		// INV-FILE-08: ls on a file returns 1 entry for the file itself.
-		entries = append(entries, t.makeEntry(info, resolvedPath))
-		count = 1
+		match := true
+		if args.Pattern != "" {
+			match, _ = filepath.Match(args.Pattern, info.Name())
+		}
+		if match {
+			entries = append(entries, t.makeEntry(info, resolvedPath))
+			count = 1
+		}
 	} else {
 		// It's a directory
 		if !args.Recursive {
@@ -106,6 +125,16 @@ func (t *lsTool) Execute(ctx context.Context, args contracts_phase1.LsArgs) cont
 				if !args.ShowHidden && strings.HasPrefix(e.Name(), ".") {
 					continue
 				}
+
+				match := true
+				if args.Pattern != "" {
+					match, _ = filepath.Match(args.Pattern, e.Name())
+				}
+
+				if !match {
+					continue
+				}
+
 				eInfo, err := e.Info()
 				if err != nil {
 					continue
@@ -160,6 +189,15 @@ func (t *lsTool) Execute(ctx context.Context, args contracts_phase1.LsArgs) cont
 						}
 						return nil
 					}
+				}
+
+				match := true
+				if args.Pattern != "" {
+					match, _ = filepath.Match(args.Pattern, d.Name())
+				}
+
+				if !match {
+					return nil
 				}
 
 				if count >= maxMatches {
@@ -218,13 +256,18 @@ func (t *lsTool) RegisterMCP(s *server.MCPServer) {
 		mcp.WithBoolean("show_hidden",
 			mcp.Description("If true, includes files and directories starting with a dot (.)."),
 		),
+		mcp.WithString("pattern",
+			mcp.Description("Optional glob pattern to filter entries by name (e.g. \"*.go\")."),
+		),
 	)
 
 	s.AddTool(mcpTool, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-		args := contracts_phase1.LsArgs{
-			Recursive:  false,
-			MaxDepth:   1,
-			ShowHidden: false,
+		args := LsArgsExtended{
+			LsArgs: contracts_phase1.LsArgs{
+				Recursive:  false,
+				MaxDepth:   1,
+				ShowHidden: false,
+			},
 		}
 
 		argsMap, ok := request.Params.Arguments.(map[string]interface{})
@@ -240,6 +283,9 @@ func (t *lsTool) RegisterMCP(s *server.MCPServer) {
 			}
 			if showHidden, ok := argsMap["show_hidden"].(bool); ok {
 				args.ShowHidden = showHidden
+			}
+			if pattern, ok := argsMap["pattern"].(string); ok {
+				args.Pattern = pattern
 			}
 		}
 
