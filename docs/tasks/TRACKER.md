@@ -26,7 +26,7 @@ This file tracks the status of all Jules tasks and the corresponding Jules sessi
 | [Task 17: sort](./phase-2/task17_sort.md) | ✅ Done | [15180364123831751260](https://jules.google.com/session/15180364123831751260) | [Merged](https://github.com/KrushnaVardhanReddy/osmcp/pull/15) |
 | [Task 18: awk](./phase-2/task18_awk.md) | ✅ Done | [3087541465171992827](https://jules.google.com/session/3087541465171992827) | [Merged](https://github.com/KrushnaVardhanReddy/osmcp/pull/16) |
 | [Task 19: tar](./phase-2/task19_tar.md) | ✅ Done | [1731959680732190538](https://jules.google.com/session/1731959680732190538) | [Merged](https://github.com/KrushnaVardhanReddy/osmcp/pull/17) |
-| [Task 20: Built-in Filter Params (ls pattern, git_log author/since/until)](./phase-2/task20_filter_params.md) | 🔄 In Progress | [6758105642240493171](https://jules.google.com/session/6758105642240493171) | |
+| [Task 20: Built-in Filter Params (ls pattern, git_log author/since/until)](./phase-2/task20_filter_params.md) | ✅ Done | [6758105642240493171](https://jules.google.com/session/6758105642240493171) | [Merged](https://github.com/KrushnaVardhanReddy/osmcp/pull/18) |
 | [Task 14: Phase 2 E2E Testing](./phase-2/task14_e2e_testing.md) | Pending | | |
 
 ## Phase 3: Templates & Agent Onboarding
