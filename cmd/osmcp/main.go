@@ -103,6 +103,23 @@ func main() {
 	findTool := tools.NewFindTool(policyEngine, envelopeBuilder)
 	toolRegistry.Register(findTool)
 
+	gitAddTool := tools.NewGitAddTool(policyEngine, envelopeBuilder)
+	toolRegistry.Register(gitAddTool)
+
+	gitCommitTool := tools.NewGitCommitTool(policyEngine, envelopeBuilder)
+	toolRegistry.Register(gitCommitTool)
+
+	gitCheckoutTool := tools.NewGitCheckoutTool(policyEngine, envelopeBuilder)
+	toolRegistry.Register(gitCheckoutTool)
+
+	gitBranchTool := tools.NewGitBranchTool(policyEngine, envelopeBuilder)
+	toolRegistry.Register(gitBranchTool)
+
+	gitPullTool := tools.NewGitPullTool(policyEngine, envelopeBuilder)
+	toolRegistry.Register(gitPullTool)
+
+	gitPushTool := tools.NewGitPushTool(policyEngine, envelopeBuilder)
+	toolRegistry.Register(gitPushTool)
 
 	s := server.NewMCPServer("osmcp", "0.1.0", server.WithToolCapabilities(true))
 
