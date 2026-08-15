@@ -1,4 +1,6 @@
-package contracts
+package phase2
+
+import "github.com/osmcp/osmcp/docs/contracts/cross_cutting"
 
 // WriteFileRequest defines the parameters for the write_file tool.
 type WriteFileRequest struct {
@@ -39,15 +41,15 @@ type CpRequest struct {
 // FSMutationTool implementations must embed the policy engine and response builder.
 type FSMutationTool interface {
 	// WriteFile executes the write_file tool.
-	WriteFile(req WriteFileRequest) Envelope
+	WriteFile(req WriteFileRequest) contracts.Envelope
 	// AppendFile executes the append_file tool.
-	AppendFile(req AppendFileRequest) Envelope
+	AppendFile(req AppendFileRequest) contracts.Envelope
 	// Mkdir executes the mkdir tool.
-	Mkdir(req MkdirRequest) Envelope
+	Mkdir(req MkdirRequest) contracts.Envelope
 	// Rm executes the rm tool.
-	Rm(req RmRequest) Envelope
+	Rm(req RmRequest) contracts.Envelope
 	// Mv executes the mv tool.
-	Mv(req MvRequest) Envelope
+	Mv(req MvRequest) contracts.Envelope
 	// Cp executes the cp tool.
-	Cp(req CpRequest) Envelope
+	Cp(req CpRequest) contracts.Envelope
 }

@@ -1,4 +1,6 @@
-package contracts
+package phase2
+
+import "github.com/osmcp/osmcp/docs/contracts/cross_cutting"
 
 // PatchRequest defines the parameters for the patch tool.
 type PatchRequest struct {
@@ -8,5 +10,5 @@ type PatchRequest struct {
 
 // PatchMutationTool implementations must embed the policy engine and response builder.
 type PatchMutationTool interface {
-	Patch(req PatchRequest) Envelope
+	Patch(req PatchRequest) contracts.Envelope
 }

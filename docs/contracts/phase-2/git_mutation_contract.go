@@ -1,4 +1,6 @@
-package contracts
+package phase2
+
+import "github.com/osmcp/osmcp/docs/contracts/cross_cutting"
 
 // GitAddRequest defines parameters for the git_add tool.
 type GitAddRequest struct {
@@ -45,10 +47,10 @@ type GitPushRequest struct {
 
 // GitMutationTool implementations must embed the policy engine and response builder.
 type GitMutationTool interface {
-	GitAdd(req GitAddRequest) Envelope
-	GitCommit(req GitCommitRequest) Envelope
-	GitCheckout(req GitCheckoutRequest) Envelope
-	GitBranch(req GitBranchRequest) Envelope
-	GitPull(req GitPullRequest) Envelope
-	GitPush(req GitPushRequest) Envelope
+	GitAdd(req GitAddRequest) contracts.Envelope
+	GitCommit(req GitCommitRequest) contracts.Envelope
+	GitCheckout(req GitCheckoutRequest) contracts.Envelope
+	GitBranch(req GitBranchRequest) contracts.Envelope
+	GitPull(req GitPullRequest) contracts.Envelope
+	GitPush(req GitPushRequest) contracts.Envelope
 }
