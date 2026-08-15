@@ -6,6 +6,9 @@ osmcp exposes a curated set of safe filesystem, git, and text-processing tools t
 
 📖 **Read the comprehensive [Architecture & Design Document](docs/ARCHITECTURE.md)** for a deep dive into the philosophy, safety boundaries, and design decisions behind osmcp.
 
+[![LiteLLM Compatible](https://img.shields.io/badge/LiteLLM-Compatible-blue?style=flat-square)](docs/integrations/litellm.md)
+[![Smithery Verified](https://img.shields.io/badge/Smithery-Verified-green?style=flat-square)](#smithery-integration)
+
 ## Features
 
 | Category | Tools | Phase |
@@ -30,6 +33,11 @@ osmcp binary
     ├── Tool Registry      ← self-registering tools via RegisterMCP()
     └── Envelope Builder   ← typed {ok, data, error, meta} responses
 ```
+
+## Demo
+
+![osmcp Demo Action](https://raw.githubusercontent.com/KrushnaVardhanReddy/osmcp/main/assets/demo.gif)
+*A demonstration of Claude Desktop securely editing code via osmcp, safely bounded by a TOML policy engine.*
 
 ## Quick Start
 
@@ -71,9 +79,35 @@ path        = "/var/log/osmcp-audit.ndjson"
 bin/osmcp --policy policy.toml
 ```
 
-The binary communicates over **stdio** using MCP JSON-RPC. Connect any MCP-compatible client (Claude Desktop, Cursor, etc.).
+The binary communicates over **stdio** using MCP JSON-RPC. Connect any MCP-compatible client.
 
-### 4. Test
+## Client Integrations
+
+### Claude Desktop
+Add the following to your `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "osmcp": {
+      "command": "osmcp",
+      "args": ["--policy", "/absolute/path/to/policy.toml"]
+    }
+  }
+}
+```
+
+### Smithery (npx)
+To install `osmcp` for Claude Desktop automatically via Smithery:
+
+```bash
+npx @smithery/cli install osmcp
+```
+
+### LiteLLM
+Integrate `osmcp` into your enterprise LLM proxy using the [LiteLLM MCP Gateway](docs/integrations/litellm.md).
+
+### 5. Test
 
 ```bash
 make test     # unit tests
