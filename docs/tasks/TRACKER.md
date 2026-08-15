@@ -40,8 +40,8 @@ This file tracks the status of all Jules tasks and the corresponding Jules sessi
 
 | Task | Status | Session URL | PR |
 |------|--------|-------------|----|
-| [Task 21: get_env (Safe Environment Variables)](./phase-4/task21_get_env.md) | 🔄 In Progress | [1118220559952991016](https://jules.google.com/session/1118220559952991016) | |
-| [Task 22: hash_file (Cryptographic Digests)](./phase-4/task22_hash_file.md) | 🔄 In Progress | [12225734384948200649](https://jules.google.com/session/12225734384948200649) | |
+| [Task 21: get_env (Safe Environment Variables)](./phase-4/task21_get_env.md) | ✅ Done | [1118220559952991016](https://jules.google.com/session/1118220559952991016) | [Merged](https://github.com/KrushnaVardhanReddy/osmcp/pull/21) |
+| [Task 22: hash_file (Cryptographic Digests)](./phase-4/task22_hash_file.md) | ✅ Done | [12225734384948200649](https://jules.google.com/session/12225734384948200649) | [Merged](https://github.com/KrushnaVardhanReddy/osmcp/pull/22) |
 | [Task 24: Phase 3 & 4 E2E Testing](./phase-4/task24_e2e_testing.md) | Pending | | |
 
 ## Phase 5: Distribution & Launch
