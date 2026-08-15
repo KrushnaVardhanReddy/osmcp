@@ -179,6 +179,11 @@ TASKS = {
         "phase": "phase-2",
         "prompt": _load_prompt("docs/tasks/phase-2/task19_tar.md"),
     },
+    20: {
+        "name": "Task 20 — Built-in Filter Params",
+        "phase": "phase-2",
+        "prompt": _load_prompt("docs/tasks/phase-2/task20_filter_params.md"),
+    },
     15: {
         "name": "Task 15 — Templates & Agent Onboarding",
         "phase": "phase-3",
@@ -194,7 +199,7 @@ TASKS = {
 # ── Wave definitions — groups of task IDs to submit together ─────────────────
 WAVES = {
     "phase-1": [4, 5, 6, 7, 8, 9],
-    "phase-2": [11, 12, 13, 14, 17, 18, 19],
+    "phase-2": [11, 12, 13, 14, 17, 18, 19, 20],
     "phase-3": [15, 16],
 }
 

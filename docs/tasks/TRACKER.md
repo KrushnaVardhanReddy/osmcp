@@ -27,6 +27,7 @@ This file tracks the status of all Jules tasks and the corresponding Jules sessi
 | [Task 17: sort](./phase-2/task17_sort.md) | Pending | | |
 | [Task 18: awk](./phase-2/task18_awk.md) | Pending | | |
 | [Task 19: tar](./phase-2/task19_tar.md) | Pending | | |
+| [Task 20: Built-in Filter Params (ls pattern, git_log author/since/until)](./phase-2/task20_filter_params.md) | Pending | | |
 
 ## Phase 3: Templates & Agent Onboarding
 
