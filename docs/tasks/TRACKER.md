@@ -14,4 +14,4 @@ This file tracks the status of all Jules tasks and the corresponding Jules sessi
 | [Task 7: Transform Tools (jq, sed, diff)](./phase-1/task7_transform_tools.md) | ✅ Done | [1575872595118043826](https://jules.google.com/session/1575872595118043826) | |
 | [Task 8: Utility Tools (tree, head, tail, du)](./phase-1/task8_utility_tools.md) | ✅ Done | [15190497776087906707](https://jules.google.com/session/15190497776087906707) | |
 | [Task 9: E2E Testing](./phase-1/task9_e2e_testing.md) | ✅ Done | [13647040135531084746](https://jules.google.com/session/13647040135531084746) | |
-| Task 10: Release v1.0.0 | Pending | | |
+| Task 10: Release v1.0.0 | ✅ Done | — | [v1.0.0](https://github.com/KrushnaVardhanReddy/osmcp/releases/tag/v1.0.0) |
