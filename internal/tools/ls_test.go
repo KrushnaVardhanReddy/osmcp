@@ -265,3 +265,11 @@ func TestLsTool_Pattern(t *testing.T) {
 		}
 	})
 }
+
+func (m *mockPolicyEngine) RunScriptConfig() contracts.RunScriptConfig {
+	return contracts.RunScriptConfig{}
+}
+
+func (m *mockPolicyEngine) AllowedRoot() string {
+	return "/tmp/mockroot"
+}

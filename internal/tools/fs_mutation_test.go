@@ -331,3 +331,11 @@ func TestCpTool(t *testing.T) {
 		}
 	})
 }
+
+func (m *mockPolicyEngineFs) RunScriptConfig() contracts.RunScriptConfig {
+	return contracts.RunScriptConfig{}
+}
+
+func (m *mockPolicyEngineFs) AllowedRoot() string {
+	return "/tmp/mockroot"
+}

@@ -86,6 +86,12 @@ func (e *engine) Evaluate(ctx context.Context, toolName string, pathArgs []strin
 		return err
 	}
 
+		if toolName == "run_script" && !e.policy.PolicyConfig.AllowRunScript {
+		errCode = string(contracts.ErrPolicyDenied)
+		err = &contracts.PolicyError{Reason: "run_script not permitted by policy"}
+		return err
+	}
+
 	allowedRoot := filepath.Clean(e.policy.PolicyConfig.AllowedRoot)
 
 	for _, p := range pathArgs {
@@ -143,10 +149,21 @@ func (e *engine) Limits() contracts.PolicyLimits {
 	}
 }
 
+func (e *engine) RunScriptConfig() contracts.RunScriptConfig {
+	return contracts.RunScriptConfig{
+		BlockedBinaries: e.policy.RunScript.BlockedBinaries,
+		AllowNetwork:    e.policy.RunScript.AllowNetwork,
+	}
+}
+
 func isGitWrite(toolName string) bool {
 	switch toolName {
 	case "git_add", "git_commit", "git_branch":
 		return true
 	}
 	return false
+}
+
+func (e *engine) AllowedRoot() string {
+	return e.policy.PolicyConfig.AllowedRoot
 }

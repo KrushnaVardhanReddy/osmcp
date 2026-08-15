@@ -19,6 +19,8 @@ func (m *mockPolicyEngineGetEnvDenyAll) IsToolVisible(toolName string) bool { re
 func (m *mockPolicyEngineGetEnvDenyAll) Limits() contracts.PolicyLimits {
 	return contracts.PolicyLimits{}
 }
+func (m *mockPolicyEngineGetEnvDenyAll) AllowedRoot() string { return "/tmp" }
+func (m *mockPolicyEngineGetEnvDenyAll) RunScriptConfig() contracts.RunScriptConfig { return contracts.RunScriptConfig{} }
 
 func TestGetEnvTool(t *testing.T) {
 	builder := response.NewBuilder()

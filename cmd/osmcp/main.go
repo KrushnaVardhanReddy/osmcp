@@ -169,6 +169,9 @@ func main() {
 	toolRegistry.Register(tools.NewGetEnvTool(policyEngine, envelopeBuilder, p.PolicyConfig.EnvAllowlist))
 	toolRegistry.Register(tools.NewHashFileTool(policyEngine, envelopeBuilder))
 
+	runScriptTool := tools.NewRunScriptTool(policyEngine, envelopeBuilder)
+	toolRegistry.Register(runScriptTool)
+
 	s := server.NewMCPServer("osmcp", version, server.WithToolCapabilities(true))
 
 	visibleTools := toolRegistry.VisibleTools()
