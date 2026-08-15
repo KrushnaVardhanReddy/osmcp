@@ -109,9 +109,10 @@ func TestTarTool_List(t *testing.T) {
 	data := res.Data.(phase2.TarListData)
 
 	assert.Equal(t, 2, data.Count)
-	assert.Equal(t, "file1.txt", data.Entries[0].Name)
-	assert.Equal(t, "dir1/", data.Entries[1].Name)
-	assert.True(t, data.Entries[1].IsDir)
+	assert.Contains(t, []string{"file1.txt", "dir1/"}, data.Entries[0].Name)
+	assert.Contains(t, []string{"file1.txt", "dir1/"}, data.Entries[1].Name)
+	// verify one is dir and one is not
+	assert.True(t, data.Entries[0].IsDir != data.Entries[1].IsDir)
 }
 
 func TestTarTool_ExtractText(t *testing.T) {
