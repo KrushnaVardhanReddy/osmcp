@@ -1,10 +1,5 @@
 package contracts
 
-import (
-	"github.com/osmcp/osmcp/internal/policy"
-	"github.com/osmcp/osmcp/internal/response"
-)
-
 // GitAddRequest defines parameters for the git_add tool.
 type GitAddRequest struct {
 	RepoPath string   `json:"repo_path"`
@@ -50,10 +45,10 @@ type GitPushRequest struct {
 
 // GitMutationTool implementations must embed the policy engine and response builder.
 type GitMutationTool interface {
-	GitAdd(req GitAddRequest) response.Envelope
-	GitCommit(req GitCommitRequest) response.Envelope
-	GitCheckout(req GitCheckoutRequest) response.Envelope
-	GitBranch(req GitBranchRequest) response.Envelope
-	GitPull(req GitPullRequest) response.Envelope
-	GitPush(req GitPushRequest) response.Envelope
+	GitAdd(req GitAddRequest) Envelope
+	GitCommit(req GitCommitRequest) Envelope
+	GitCheckout(req GitCheckoutRequest) Envelope
+	GitBranch(req GitBranchRequest) Envelope
+	GitPull(req GitPullRequest) Envelope
+	GitPush(req GitPushRequest) Envelope
 }
