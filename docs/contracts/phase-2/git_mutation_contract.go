@@ -1,9 +1,6 @@
-package contracts
+package phase2
 
-import (
-	"github.com/osmcp/osmcp/internal/policy"
-	"github.com/osmcp/osmcp/internal/response"
-)
+import "github.com/osmcp/osmcp/docs/contracts/cross_cutting"
 
 // GitAddRequest defines parameters for the git_add tool.
 type GitAddRequest struct {
@@ -50,10 +47,10 @@ type GitPushRequest struct {
 
 // GitMutationTool implementations must embed the policy engine and response builder.
 type GitMutationTool interface {
-	GitAdd(req GitAddRequest) response.Envelope
-	GitCommit(req GitCommitRequest) response.Envelope
-	GitCheckout(req GitCheckoutRequest) response.Envelope
-	GitBranch(req GitBranchRequest) response.Envelope
-	GitPull(req GitPullRequest) response.Envelope
-	GitPush(req GitPushRequest) response.Envelope
+	GitAdd(req GitAddRequest) contracts.Envelope
+	GitCommit(req GitCommitRequest) contracts.Envelope
+	GitCheckout(req GitCheckoutRequest) contracts.Envelope
+	GitBranch(req GitBranchRequest) contracts.Envelope
+	GitPull(req GitPullRequest) contracts.Envelope
+	GitPush(req GitPushRequest) contracts.Envelope
 }
