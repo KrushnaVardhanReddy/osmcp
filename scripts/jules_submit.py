@@ -209,6 +209,16 @@ TASKS = {
         "phase": "phase-5",
         "prompt": _load_prompt("docs/tasks/phase-5/task23_distribution.md"),
     },
+    24: {
+        "name": "Task 24 — Phase 3 & 4 E2E Testing",
+        "phase": "phase-4",
+        "prompt": _load_prompt("docs/tasks/phase-4/task24_e2e_testing.md"),
+    },
+    25: {
+        "name": "Task 25 — LiteLLM MCP Ecosystem Publishing",
+        "phase": "phase-5",
+        "prompt": _load_prompt("docs/tasks/phase-5/task25_litellm_publishing.md"),
+    },
 }
 
 # ── Wave definitions — groups of task IDs to submit together ─────────────────
@@ -216,8 +226,8 @@ WAVES = {
     "phase-1": [4, 5, 6, 7, 8, 9],
     "phase-2": [11, 12, 13, 17, 18, 19, 20, 14],
     "phase-3": [15, 16],
-    "phase-4": [21, 22],
-    "phase-5": [23],
+    "phase-4": [21, 22, 24],
+    "phase-5": [23, 25],
 }
 
 # ──────────────────────────────────────────────────────────────────────────────
