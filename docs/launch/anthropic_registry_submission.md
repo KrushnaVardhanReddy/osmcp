@@ -1,7 +1,7 @@
 # Anthropic MCP Servers Registry Submission
 
 **Repository:** `KrushnaVardhanReddy/osmcp`
-**Target Registry:** [https://github.com/anthropics/mcp-servers](https://github.com/anthropics/mcp-servers)
+**Target Registry:** [https://github.com/modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers)
 
 ## Pull Request Details
 
