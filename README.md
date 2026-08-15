@@ -2,19 +2,21 @@
 
 > **A typed, policy-controlled OS capability layer for AI agents via the Model Context Protocol (MCP).**
 
-osmcp exposes a curated set of read-only filesystem, git, and text-processing tools to AI agents — all governed by a strict **Policy Engine** that enforces path boundaries, tool allowlists, output limits, and an immutable audit trail.
+osmcp exposes a curated set of safe filesystem, git, and text-processing tools to AI agents — all governed by a strict **Policy Engine** that enforces path boundaries, tool allowlists, output limits, mutation controls, and an immutable audit trail.
 
 📖 **Read the comprehensive [Architecture & Design Document](docs/ARCHITECTURE.md)** for a deep dive into the philosophy, safety boundaries, and design decisions behind osmcp.
 
-## Features (Phase 1 — v1.0.0)
+## Features
 
-| Category | Tools |
-|---|---|
-| 🔍 **Search** | `grep`, `find` |
-| 📁 **File Inspection** | `ls`, `cat`, `stat`, `wc`, `head`, `tail` |
-| 🌳 **Filesystem** | `tree`, `du` |
-| 🔀 **Git Intelligence** | `git_status`, `git_diff`, `git_log` |
-| 🔧 **Transform** | `jq`, `sed`, `diff` |
+| Category | Tools | Phase |
+|---|---|---|
+| 🔍 **Search** | `grep`, `find` | 1 |
+| 📁 **File Inspection** | `ls`, `cat`, `stat`, `wc`, `head`, `tail` | 1 |
+| 🌳 **Filesystem** | `tree`, `du` | 1 |
+| 🔀 **Git Intelligence** | `git_status`, `git_diff`, `git_log` | 1 |
+| 🔧 **Transform** | `jq`, `sed`, `diff` | 1 |
+| ✍️ **File Mutation** | `write_file`, `append_file`, `mkdir`, `rm`, `mv`, `cp`, `patch` | 2 |
+| 🚀 **Git Mutation** | `git_add`, `git_commit`, `git_checkout`, `git_branch`, `git_pull`, `git_push` | 2 |
 
 ## Architecture
 
