@@ -121,6 +121,7 @@ func main() {
 	gitPushTool := tools.NewGitPushTool(policyEngine, envelopeBuilder)
 	toolRegistry.Register(gitPushTool)
 	toolRegistry.Register(tools.NewPatchTool(policyEngine, envelopeBuilder))
+	toolRegistry.Register(tools.NewSortTool(policyEngine, envelopeBuilder))
 
 	s := server.NewMCPServer("osmcp", "0.1.0", server.WithToolCapabilities(true))
 
