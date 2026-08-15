@@ -1,0 +1,12 @@
+[policy]
+allowed_root   = "."
+allowed_tools  = ["grep", "find", "ls", "cat", "git_status", "git_diff", "git_log"]
+allow_mutation = false
+
+[limits]
+timeout_ms       = 3000
+max_output_bytes = 262144   # 256 KB
+max_matches      = 100
+
+[audit]
+destination = "stderr"

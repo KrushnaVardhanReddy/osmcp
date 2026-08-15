@@ -1,0 +1,20 @@
+{
+  "version": "1",
+  "ok": true,
+  "tool": "git_log",
+  "data": {
+    "commits": [
+      {
+        "hash": "1234567",
+        "author": "Author",
+        "date": "2021-01-01",
+        "message": "commit message"
+      }
+    ]
+  },
+  "meta": {
+    "execution_time_ms": 10,
+    "truncated": false
+  },
+  "error": null
+}

@@ -1,0 +1,15 @@
+{
+  "version": "1",
+  "ok": false,
+  "tool": "git_checkout",
+  "data": null,
+  "meta": {
+    "execution_time_ms": 10,
+    "truncated": false
+  },
+  "error": {
+    "code": "POLICY_DENIED",
+    "message": "mutation not allowed",
+    "retryable": false
+  }
+}

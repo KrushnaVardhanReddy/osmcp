@@ -1,0 +1,17 @@
+[policy]
+allowed_root   = "/path/to/project"
+allowed_tools  = ["grep", "ls", "cat", "stat", "wc", "head", "tail", "tree", "du", "find",
+                  "git_status", "git_diff", "git_log", "jq", "sed", "diff",
+                  "write_file", "append_file", "mkdir", "rm", "mv", "cp",
+                  "git_add", "git_commit", "git_checkout", "git_branch",
+                  "git_pull", "git_push", "patch"]
+allow_mutation = true
+
+[limits]
+timeout_ms       = 10000
+max_output_bytes = 2097152   # 2 MB
+max_matches      = 500
+
+[audit]
+destination = "file"
+path        = ".osmcp/audit.ndjson"
