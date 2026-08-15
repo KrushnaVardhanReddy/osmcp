@@ -24,7 +24,7 @@ This file tracks the status of all Jules tasks and the corresponding Jules sessi
 | [Task 12: Git Mutation](./phase-2/task12_git_mutation.md) | ✅ Done | [9239641306438609030](https://jules.google.com/session/9239641306438609030) | [Merged](https://github.com/KrushnaVardhanReddy/osmcp/pull/13) |
 | [Task 13: Patch Mutation](./phase-2/task13_patch_mutation.md) | ✅ Done | [8438355844821452775](https://jules.google.com/session/8438355844821452775) | [Merged](https://github.com/KrushnaVardhanReddy/osmcp/pull/14) |
 | [Task 17: sort](./phase-2/task17_sort.md) | ✅ Done | [15180364123831751260](https://jules.google.com/session/15180364123831751260) | [Merged](https://github.com/KrushnaVardhanReddy/osmcp/pull/15) |
-| [Task 18: awk](./phase-2/task18_awk.md) | 🔄 In Progress | [3087541465171992827](https://jules.google.com/session/3087541465171992827) | |
+| [Task 18: awk](./phase-2/task18_awk.md) | ✅ Done | [3087541465171992827](https://jules.google.com/session/3087541465171992827) | [Merged](https://github.com/KrushnaVardhanReddy/osmcp/pull/16) |
 | [Task 19: tar](./phase-2/task19_tar.md) | 🔄 In Progress | [1731959680732190538](https://jules.google.com/session/1731959680732190538) | |
 | [Task 20: Built-in Filter Params (ls pattern, git_log author/since/until)](./phase-2/task20_filter_params.md) | Pending | | |
 | [Task 14: Phase 2 E2E Testing](./phase-2/task14_e2e_testing.md) | Pending | | |
