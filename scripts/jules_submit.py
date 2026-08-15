@@ -164,6 +164,21 @@ TASKS = {
         "phase": "phase-2",
         "prompt": _load_prompt("docs/tasks/phase-2/task14_e2e_testing.md"),
     },
+    17: {
+        "name": "Task 17 — sort",
+        "phase": "phase-2",
+        "prompt": _load_prompt("docs/tasks/phase-2/task17_sort.md"),
+    },
+    18: {
+        "name": "Task 18 — awk",
+        "phase": "phase-2",
+        "prompt": _load_prompt("docs/tasks/phase-2/task18_awk.md"),
+    },
+    19: {
+        "name": "Task 19 — tar",
+        "phase": "phase-2",
+        "prompt": _load_prompt("docs/tasks/phase-2/task19_tar.md"),
+    },
     15: {
         "name": "Task 15 — Templates & Agent Onboarding",
         "phase": "phase-3",
@@ -179,7 +194,7 @@ TASKS = {
 # ── Wave definitions — groups of task IDs to submit together ─────────────────
 WAVES = {
     "phase-1": [4, 5, 6, 7, 8, 9],
-    "phase-2": [11, 12, 13, 14],
+    "phase-2": [11, 12, 13, 14, 17, 18, 19],
     "phase-3": [15, 16],
 }
 
