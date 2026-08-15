@@ -15,3 +15,12 @@ This file tracks the status of all Jules tasks and the corresponding Jules sessi
 | [Task 8: Utility Tools (tree, head, tail, du)](./phase-1/task8_utility_tools.md) | ✅ Done | [15190497776087906707](https://jules.google.com/session/15190497776087906707) | |
 | [Task 9: E2E Testing](./phase-1/task9_e2e_testing.md) | ✅ Done | [13647040135531084746](https://jules.google.com/session/13647040135531084746) | |
 | Task 10: Release v1.0.0 | ✅ Done | — | [v1.0.0](https://github.com/KrushnaVardhanReddy/osmcp/releases/tag/v1.0.0) |
+
+## Phase 2: Mutation & Write Capabilities
+
+| Task | Status | Session URL | PR |
+|------|--------|-------------|----|
+| [Task 11: File System Mutation](./phase-2/task11_fs_mutation.md) | Pending | | |
+| [Task 12: Git Mutation](./phase-2/task12_git_mutation.md) | Pending | | |
+| [Task 13: Patch Mutation](./phase-2/task13_patch_mutation.md) | Pending | | |
+| [Task 14: Phase 2 E2E Testing](./phase-2/task14_e2e_testing.md) | Pending | | |
