@@ -47,5 +47,6 @@ This file tracks the status of all Jules tasks and the corresponding Jules sessi
 ## Phase 5: Distribution & Launch
 
 | Task | Status | Session URL | PR |
-|------|--------|-------------|----|
+|------|--------|-------------|-----|
 | [Task 23: Launch Materials (Claude Config, Anthropic PR, Demo)](./phase-5/task23_distribution.md) | Pending | | |
+| [Task 25: LiteLLM MCP Ecosystem Publishing](./phase-5/task25_litellm_publishing.md) | 🔍 Research | | |
