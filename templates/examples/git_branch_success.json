@@ -1,0 +1,15 @@
+{
+  "version": "1",
+  "ok": true,
+  "tool": "git_branch",
+  "data": {
+    "branches": [
+      "main"
+    ]
+  },
+  "meta": {
+    "execution_time_ms": 10,
+    "truncated": false
+  },
+  "error": null
+}

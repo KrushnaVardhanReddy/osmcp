@@ -11,13 +11,16 @@ import (
 	"github.com/osmcp/osmcp/internal/policy"
 	"github.com/osmcp/osmcp/internal/response"
 	"github.com/osmcp/osmcp/internal/tools"
+	"github.com/osmcp/osmcp/templates"
 )
 
 var (
-	versionFlag   = flag.Bool("version", false, "Print version string and exit")
-	policyFlag    = flag.String("policy", ".osmcp/policy.toml", "Path to policy file")
-	auditLogFlag  = flag.String("audit-log", "", "Path to audit log file")
-	validateFlag  = flag.Bool("validate", false, "Validate policy and exit")
+	versionFlag  = flag.Bool("version", false, "Print version string and exit")
+	policyFlag   = flag.String("policy", ".osmcp/policy.toml", "Path to policy file")
+	auditLogFlag = flag.String("audit-log", "", "Path to audit log file")
+	validateFlag = flag.Bool("validate", false, "Validate policy and exit")
+	initFlag     = flag.Bool("init", false, "Scaffold a starter configuration")
+	profileFlag  = flag.String("profile", "dev-agent", "Profile to use for initialization (read-only, dev-agent, ci-agent, review-agent)")
 )
 
 func main() {
@@ -25,6 +28,41 @@ func main() {
 
 	if *versionFlag {
 		fmt.Println("osmcp v0.1.0")
+		os.Exit(0)
+	}
+
+	if *initFlag {
+		profile := *profileFlag
+		validProfiles := map[string]bool{"read-only": true, "dev-agent": true, "ci-agent": true, "review-agent": true}
+		if !validProfiles[profile] {
+			fmt.Fprintf(os.Stderr, "invalid profile: %s. Valid profiles are read-only, dev-agent, ci-agent, review-agent\n", profile)
+			os.Exit(1)
+		}
+
+		if _, err := os.Stat(".osmcp/policy.toml"); err == nil {
+			fmt.Fprintf(os.Stderr, "error: .osmcp/policy.toml already exists. Will not overwrite.\n")
+			os.Exit(1)
+		}
+
+		if err := os.MkdirAll(".osmcp", 0755); err != nil {
+			fmt.Fprintf(os.Stderr, "failed to create .osmcp directory: %v\n", err)
+			os.Exit(1)
+		}
+
+		content, err := templates.PolicyTemplates.ReadFile("policies/" + profile + ".toml")
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "failed to read embedded template: %v\n", err)
+			os.Exit(1)
+		}
+
+		if err := os.WriteFile(".osmcp/policy.toml", content, 0644); err != nil {
+			fmt.Fprintf(os.Stderr, "failed to write policy file: %v\n", err)
+			os.Exit(1)
+		}
+
+		fmt.Printf("✅ Initialized osmcp with profile: %s\n", profile)
+		fmt.Printf("   Config: .osmcp/policy.toml\n")
+		fmt.Printf("   Run:    osmcp --policy .osmcp/policy.toml\n")
 		os.Exit(0)
 	}
 
@@ -55,16 +93,16 @@ func main() {
 		}
 		auditLogger = l
 	} else if p.Audit.Destination == "stderr" {
-        l, _ := audit.NewLogger("stderr", "")
-        auditLogger = l
-    } else if p.Audit.Destination == "file" && p.Audit.Path != "" {
-        l, err := audit.NewLogger("file", p.Audit.Path)
-        if err != nil {
-            fmt.Fprintf(os.Stderr, "failed to init audit logger: %v\n", err)
-            os.Exit(1)
-        }
-        auditLogger = l
-    }
+		l, _ := audit.NewLogger("stderr", "")
+		auditLogger = l
+	} else if p.Audit.Destination == "file" && p.Audit.Path != "" {
+		l, err := audit.NewLogger("file", p.Audit.Path)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "failed to init audit logger: %v\n", err)
+			os.Exit(1)
+		}
+		auditLogger = l
+	}
 
 	policyEngine := policy.NewEngine(p, auditLogger)
 	envelopeBuilder := response.NewBuilder()

@@ -1,0 +1,13 @@
+{
+  "version": "1",
+  "ok": true,
+  "tool": "tree",
+  "data": {
+    "tree": ".\n\u251c\u2500\u2500 a.txt\n\u2514\u2500\u2500 b.txt"
+  },
+  "meta": {
+    "execution_time_ms": 10,
+    "truncated": false
+  },
+  "error": null
+}

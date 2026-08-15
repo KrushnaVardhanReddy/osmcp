@@ -1,0 +1,17 @@
+{
+  "version": "1",
+  "ok": true,
+  "tool": "stat",
+  "data": {
+    "name": "a.txt",
+    "is_dir": false,
+    "size": 100,
+    "mode": "0644",
+    "mod_time": "2021-01-01T00:00:00Z"
+  },
+  "meta": {
+    "execution_time_ms": 10,
+    "truncated": false
+  },
+  "error": null
+}

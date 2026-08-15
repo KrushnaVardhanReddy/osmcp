@@ -1,0 +1,15 @@
+{
+  "version": "1",
+  "ok": true,
+  "tool": "wc",
+  "data": {
+    "lines": 1,
+    "words": 2,
+    "chars": 11
+  },
+  "meta": {
+    "execution_time_ms": 10,
+    "truncated": false
+  },
+  "error": null
+}
