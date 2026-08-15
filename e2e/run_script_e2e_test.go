@@ -104,3 +104,49 @@ allow_network = true
 		require.Equal(t, contracts.ErrPolicyDenied, env.Error.Code)
 	})
 }
+
+func TestRunScriptE2E_PolicyDenied(t *testing.T) {
+	tempDir := t.TempDir()
+
+	policyTOML := `
+[policy]
+allowed_root = "` + tempDir + `"
+allowed_tools = ["run_script"]
+allow_run_script = false
+allow_mutation = true
+
+[limits]
+timeout_ms = 10000
+max_output_bytes = 1024000
+`
+	policyPath := filepath.Join(tempDir, "policy.toml")
+	err := os.WriteFile(policyPath, []byte(policyTOML), 0644)
+	require.NoError(t, err)
+
+	client := setupMCPClient(t, policyPath)
+	defer client.Close()
+
+	req := mcp.CallToolRequest{}
+	req.Params.Name = "run_script"
+	req.Params.Arguments = map[string]interface{}{
+		"interpreter": "bash",
+		"script":      "echo 'hello from e2e'",
+		"working_dir": tempDir,
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	res, err := client.client.CallTool(ctx, req)
+	require.NoError(t, err)
+	require.Len(t, res.Content, 1)
+
+	textContent, ok := res.Content[0].(mcp.TextContent)
+	require.True(t, ok)
+
+	var env contracts.Envelope
+	err = json.Unmarshal([]byte(textContent.Text), &env)
+	require.NoError(t, err)
+	require.False(t, env.OK)
+	require.Equal(t, contracts.ErrPolicyDenied, env.Error.Code)
+}
