@@ -1,39 +1,37 @@
-# Anthropic MCP Servers Registry Submission
+# Publishing to the Official MCP Registry
 
-**Repository:** `KrushnaVardhanReddy/osmcp`
-**Target Registry:** [https://github.com/modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers)
+The official MCP registry (`registry.modelcontextprotocol.io`) is now managed via the `mcp-publisher` CLI tool rather than through Pull Requests on GitHub.
 
-## Pull Request Details
+To publish `osmcp`, follow these steps on your local machine:
 
-### Title
-`Add osmcp (OS Capabilities for AI Agents) to the registry`
-
-### Description
-```markdown
-This PR adds `osmcp` to the official MCP server registry.
-
-`osmcp` provides a typed, policy-controlled OS capability layer for AI agents. It exposes a curated set of safe filesystem, git, and text-processing tools, all governed by a strict Policy Engine (TOML) that enforces path boundaries, tool allowlists, output limits, mutation controls, and an immutable audit trail.
-
-**Capabilities:**
-- File Inspection & Transformation (grep, find, ls, cat, jq, sed, awk)
-- Filesystem Mutation (write, append, mkdir, rm, mv, cp)
-- Git Intelligence & Mutation (status, diff, log, commit, push, pull, patch)
-- Secure execution environments with environment variable whitelists and cryptographic hashing.
-
-Built entirely in Go for speed, low memory overhead, and single-binary deployment.
+## 1. Install the Publisher CLI
+If you are on macOS or Linux, install via Homebrew:
+```bash
+brew install mcp-publisher
 ```
 
-## JSON Payload for `mcpservers.json`
-
-Add this block to the appropriate category (e.g., `Developer Tools` or `System`):
-
-```json
-{
-  "name": "osmcp",
-  "description": "A typed, policy-controlled OS capability layer for AI agents. Provides safe, bounded filesystem access, git intelligence, text transformation, and process sandboxing via a configurable TOML policy.",
-  "vendor": "KrushnaVardhanReddy",
-  "sourceUrl": "https://github.com/KrushnaVardhanReddy/osmcp",
-  "command": "osmcp",
-  "args": ["--policy", "policy.toml"]
-}
+## 2. Initialize the Server Metadata
+Navigate to your `osmcp` project root and run:
+```bash
+mcp-publisher init
 ```
+This will interactively prompt you for information and generate a `server.json` file.
+* **Name Format:** Use reverse-DNS style: `io.github.krushnavardhanreddy/osmcp`
+* **Description:** "A typed, policy-controlled OS capability layer for AI agents."
+
+## 3. Authenticate with GitHub
+Authenticate the publisher CLI with your GitHub account:
+```bash
+mcp-publisher login github
+```
+Follow the device flow instructions provided in your terminal.
+
+## 4. Publish!
+Once authenticated and your `server.json` is ready, publish it to the registry:
+```bash
+mcp-publisher publish
+```
+
+You can then verify your server is live by visiting [registry.modelcontextprotocol.io](https://registry.modelcontextprotocol.io/).
+
+
