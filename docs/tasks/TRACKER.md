@@ -30,3 +30,4 @@ This file tracks the status of all Jules tasks and the corresponding Jules sessi
 | Task | Status | Session URL | PR |
 |------|--------|-------------|----|
 | [Task 15: Templates & Agent Onboarding](./phase-3/task15_templates_onboarding.md) | Pending | | |
+| [Task 16: run_script (Tier 2 Execution Engine)](./phase-3/task16_run_script.md) | Pending | | |
