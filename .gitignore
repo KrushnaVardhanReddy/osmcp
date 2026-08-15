@@ -2,3 +2,4 @@
 bin/
 *.log
 error_log.txt
+dist/
