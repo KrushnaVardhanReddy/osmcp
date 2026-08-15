@@ -16,7 +16,7 @@ Applies a unified diff patch to a file.
 
 **Policy Enforcement:**
 - Must check `policyEngine.ValidatePath(path)`.
-- Must check `policyEngine.CanMutate()`.
+- Must check `policyEngine.Evaluate()`.
 
 **Returns:**
 - Success: A confirmation message indicating the file was successfully patched.

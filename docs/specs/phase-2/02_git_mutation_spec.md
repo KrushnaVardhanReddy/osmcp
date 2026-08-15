@@ -16,7 +16,7 @@ Stages changes for the next commit.
 
 **Policy Enforcement:**
 - Must check `policyEngine.ValidatePath(repo_path)`.
-- Must check `policyEngine.CanMutate()`.
+- Must check `policyEngine.Evaluate()`.
 
 ### 2. `git_commit`
 Creates a new commit containing the currently staged changes.
@@ -29,7 +29,7 @@ Creates a new commit containing the currently staged changes.
 
 **Policy Enforcement:**
 - Must check `policyEngine.ValidatePath(repo_path)`.
-- Must check `policyEngine.CanMutate()`.
+- Must check `policyEngine.Evaluate()`.
 
 ### 3. `git_checkout`
 Switches to a different branch or restores files.
@@ -41,7 +41,7 @@ Switches to a different branch or restores files.
 
 **Policy Enforcement:**
 - Must check `policyEngine.ValidatePath(repo_path)`.
-- Must check `policyEngine.CanMutate()`.
+- Must check `policyEngine.Evaluate()`.
 
 ### 4. `git_branch`
 Creates, lists, or deletes branches.
@@ -53,7 +53,7 @@ Creates, lists, or deletes branches.
 
 **Policy Enforcement:**
 - Must check `policyEngine.ValidatePath(repo_path)`.
-- Must check `policyEngine.CanMutate()`.
+- Must check `policyEngine.Evaluate()`.
 
 ### 5. `git_pull`
 Fetches from and integrates with another repository or a local branch.
@@ -65,7 +65,7 @@ Fetches from and integrates with another repository or a local branch.
 
 **Policy Enforcement:**
 - Must check `policyEngine.ValidatePath(repo_path)`.
-- Must check `policyEngine.CanMutate()`.
+- Must check `policyEngine.Evaluate()`.
 
 ### 6. `git_push`
 Updates remote refs along with associated objects.
@@ -78,7 +78,7 @@ Updates remote refs along with associated objects.
 
 **Policy Enforcement:**
 - Must check `policyEngine.ValidatePath(repo_path)`.
-- Must check `policyEngine.CanMutate()`.
+- Must check `policyEngine.Evaluate()`.
 
 ## JSON-RPC MCP Registration
 Each tool must be self-contained and implement the `RegisterMCP(s *server.MCPServer)` interface.

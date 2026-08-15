@@ -16,7 +16,7 @@ Creates a new file or overwrites an existing file with the provided content.
 
 **Policy Enforcement:**
 - Must check `policyEngine.ValidatePath(path)`.
-- Must check `policyEngine.CanMutate()`.
+- Must check `policyEngine.Evaluate()`.
 
 **Returns:**
 - Success: Confirmation message with the number of bytes written.
@@ -31,7 +31,7 @@ Appends content to an existing file. If the file does not exist, it creates it.
 
 **Policy Enforcement:**
 - Must check `policyEngine.ValidatePath(path)`.
-- Must check `policyEngine.CanMutate()`.
+- Must check `policyEngine.Evaluate()`.
 
 ### 3. `mkdir`
 Creates a directory. It must automatically create parent directories if they do not exist (equivalent to `mkdir -p`).
@@ -41,7 +41,7 @@ Creates a directory. It must automatically create parent directories if they do 
 
 **Policy Enforcement:**
 - Must check `policyEngine.ValidatePath(path)`.
-- Must check `policyEngine.CanMutate()`.
+- Must check `policyEngine.Evaluate()`.
 
 ### 4. `rm`
 Removes a file or directory.
@@ -52,7 +52,7 @@ Removes a file or directory.
 
 **Policy Enforcement:**
 - Must check `policyEngine.ValidatePath(path)`.
-- Must check `policyEngine.CanMutate()`.
+- Must check `policyEngine.Evaluate()`.
 - *Safety Rule*: Must explicitly reject an attempt to `rm` the policy `allowed_root` directory itself.
 
 ### 5. `mv`
@@ -64,7 +64,7 @@ Moves or renames a file or directory.
 
 **Policy Enforcement:**
 - Must check `policyEngine.ValidatePath(source)` AND `policyEngine.ValidatePath(destination)`.
-- Must check `policyEngine.CanMutate()`.
+- Must check `policyEngine.Evaluate()`.
 
 ### 6. `cp`
 Copies a file or directory recursively.
@@ -75,7 +75,7 @@ Copies a file or directory recursively.
 
 **Policy Enforcement:**
 - Must check `policyEngine.ValidatePath(source)` AND `policyEngine.ValidatePath(destination)`.
-- Must check `policyEngine.CanMutate()`.
+- Must check `policyEngine.Evaluate()`.
 
 ## JSON-RPC MCP Registration
 Each tool must be self-contained and implement the `RegisterMCP(s *server.MCPServer)` interface to bind its JSON schema and handler.

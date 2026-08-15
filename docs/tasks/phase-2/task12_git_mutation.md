@@ -15,11 +15,11 @@ Implement the `GitMutationTool` interface defined in `docs/contracts/phase-2/git
 - `git_push`
 
 ## Implementation Details & Context
-1. **Mutation Policy Check (CRITICAL)**: You **MUST** call `policyEngine.CanMutate()` before modifying the Git repo. If false, return `-32603`.
+1. **Mutation Policy Check (CRITICAL)**: You **MUST** call `policyEngine.Evaluate(ctx, t.Name(), []string{repo_path}, true)` before modifying the Git repo. If it returns an error, return a `-32603` (POLICY_DENIED) envelope.
 2. **Library**: Use `github.com/go-git/go-git/v5` just like we did for Phase 1 Git tools.
 3. **Commit Signatures**: For `git_commit`, if the user provides `author_name` and `author_email`, construct an `object.Signature` with the current time. If omitted, try to read the repository config or return an error.
 4. **Tool Registry**: Implement `RegisterMCP(s *server.MCPServer)` for each tool.
 5. **Location**: Place your implementations in `internal/tools/git_mutation.go` (or individual files).
 
 ## Testing
-Write unit tests using `go-git/v5/memory` or a temporary filesystem repo to validate the mutation commands without impacting the real repo. Test the policy engine's `CanMutate` boundary as well.
+Write unit tests using `go-git/v5/memory` or a temporary filesystem repo to validate the mutation commands without impacting the real repo. Test the policy engine's `Evaluate` boundary as well.

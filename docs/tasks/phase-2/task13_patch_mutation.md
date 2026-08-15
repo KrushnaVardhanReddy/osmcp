@@ -10,8 +10,8 @@ Implement the `PatchMutationTool` interface defined in `docs/contracts/phase-2/p
 - `patch`
 
 ## Implementation Details & Context
-1. **Mutation Policy Check (CRITICAL)**: You **MUST** call `policyEngine.CanMutate()` before attempting to apply the patch. If false, return `-32603`.
-2. **Path Validation**: Use `policyEngine.ValidatePath(path)` to verify the target file is within the `allowed_root`.
+1. **Mutation Policy Check (CRITICAL)**: You **MUST** call `policyEngine.Evaluate(ctx, t.Name(), []string{path}, true)` before attempting to apply the patch. If it returns an error, return `-32603` (POLICY_DENIED).
+2. **Path Validation**: The `Evaluate()` call natively handles verifying the target file is within the `allowed_root`.
 3. **Patch Library**: You may use a Pure Go library like `github.com/hexops/gotextdiff` or `github.com/sergi/go-diff` to apply the unified diff to the target file.
 4. **Tool Registry**: Implement `RegisterMCP(s *server.MCPServer)` so the `patch` tool registers its JSON schema independently.
 5. **Location**: Place your implementation in `internal/tools/patch.go`.
