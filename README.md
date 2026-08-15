@@ -4,6 +4,8 @@
 
 osmcp exposes a curated set of read-only filesystem, git, and text-processing tools to AI agents — all governed by a strict **Policy Engine** that enforces path boundaries, tool allowlists, output limits, and an immutable audit trail.
 
+📖 **Read the comprehensive [Architecture & Design Document](docs/ARCHITECTURE.md)** for a deep dive into the philosophy, safety boundaries, and design decisions behind osmcp.
+
 ## Features (Phase 1 — v1.0.0)
 
 | Category | Tools |
@@ -29,8 +31,14 @@ osmcp binary
 
 ## Quick Start
 
-### 1. Build
+### 1. Install via Homebrew
 
+```bash
+brew tap KrushnaVardhanReddy/tap
+brew install osmcp
+```
+
+*Alternatively, build from source:*
 ```bash
 make build
 # Binary: bin/osmcp
