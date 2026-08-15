@@ -117,6 +117,12 @@ func main() {
 
 	gitPullTool := tools.NewGitPullTool(policyEngine, envelopeBuilder)
 	toolRegistry.Register(gitPullTool)
+	toolRegistry.Register(tools.NewWriteFileTool(policyEngine, envelopeBuilder))
+	toolRegistry.Register(tools.NewAppendFileTool(policyEngine, envelopeBuilder))
+	toolRegistry.Register(tools.NewMkdirTool(policyEngine, envelopeBuilder))
+	toolRegistry.Register(tools.NewRmTool(policyEngine, envelopeBuilder))
+	toolRegistry.Register(tools.NewMvTool(policyEngine, envelopeBuilder))
+	toolRegistry.Register(tools.NewCpTool(policyEngine, envelopeBuilder))
 
 	gitPushTool := tools.NewGitPushTool(policyEngine, envelopeBuilder)
 	toolRegistry.Register(gitPushTool)
