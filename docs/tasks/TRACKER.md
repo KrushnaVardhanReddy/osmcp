@@ -42,3 +42,9 @@ This file tracks the status of all Jules tasks and the corresponding Jules sessi
 |------|--------|-------------|----|
 | [Task 21: get_env (Safe Environment Variables)](./phase-4/task21_get_env.md) | Pending | | |
 | [Task 22: hash_file (Cryptographic Digests)](./phase-4/task22_hash_file.md) | Pending | | |
+
+## Phase 5: Distribution & Launch
+
+| Task | Status | Session URL | PR |
+|------|--------|-------------|----|
+| [Task 23: Launch Materials (Claude Config, Anthropic PR, Demo)](./phase-5/task23_distribution.md) | Pending | | |

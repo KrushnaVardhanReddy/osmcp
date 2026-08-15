@@ -204,6 +204,11 @@ TASKS = {
         "phase": "phase-4",
         "prompt": _load_prompt("docs/tasks/phase-4/task22_hash_file.md"),
     },
+    23: {
+        "name": "Task 23 — Launch Materials (Claude Config, Anthropic PR, Demo)",
+        "phase": "phase-5",
+        "prompt": _load_prompt("docs/tasks/phase-5/task23_distribution.md"),
+    },
 }
 
 # ── Wave definitions — groups of task IDs to submit together ─────────────────
@@ -212,6 +217,7 @@ WAVES = {
     "phase-2": [11, 12, 13, 17, 18, 19, 20, 14],
     "phase-3": [15, 16],
     "phase-4": [21, 22],
+    "phase-5": [23],
 }
 
 # ──────────────────────────────────────────────────────────────────────────────
