@@ -4,6 +4,7 @@ go 1.25.5
 
 require (
 	github.com/BurntSushi/toml v1.6.0
+	github.com/bluekeyes/go-gitdiff v0.9.0
 	github.com/go-git/go-git/v5 v5.19.2
 	github.com/itchyny/gojq v0.12.19
 	github.com/mark3labs/mcp-go v0.58.0
