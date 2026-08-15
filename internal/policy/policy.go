@@ -48,7 +48,7 @@ var knownTools = map[string]bool{
 	"git_branch": true, "git_pull": true, "git_push": true, "patch": true,
 	"awk": true,
 	"tar": true,
-	"get_env": true,
+	"get_env": true, "hash_file": true,
 }
 
 // LoadFromFile loads and parses a Policy from a TOML file.
@@ -117,7 +117,7 @@ func DefaultPolicy() *Policy {
 				"git_branch", "git_pull", "git_push",
 				"patch",
 				"sed", "jq", "diff", "awk", "tar",
-				"get_env",
+				"get_env", "hash_file",
 			},
 			AllowMutation:  false,
 			AllowGitWrite:  false,

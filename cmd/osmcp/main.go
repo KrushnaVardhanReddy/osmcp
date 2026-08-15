@@ -167,6 +167,7 @@ func main() {
 	toolRegistry.Register(tools.NewAwkTool(policyEngine, envelopeBuilder))
 	toolRegistry.Register(tools.NewTarTool(policyEngine, envelopeBuilder))
 	toolRegistry.Register(tools.NewGetEnvTool(policyEngine, envelopeBuilder, p.PolicyConfig.EnvAllowlist))
+	toolRegistry.Register(tools.NewHashFileTool(policyEngine, envelopeBuilder))
 
 	s := server.NewMCPServer("osmcp", version, server.WithToolCapabilities(true))
 
