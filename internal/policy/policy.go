@@ -22,6 +22,7 @@ type PolicySection struct {
 	AllowMutation  bool     `toml:"allow_mutation"`
 	AllowGitWrite  bool     `toml:"allow_git_write"`
 	AllowRunScript bool     `toml:"allow_run_script"`
+	EnvAllowlist   []string `toml:"env_allowlist"`
 }
 
 type LimitsSection struct {
@@ -47,6 +48,7 @@ var knownTools = map[string]bool{
 	"git_branch": true, "git_pull": true, "git_push": true, "patch": true,
 	"awk": true,
 	"tar": true,
+	"get_env": true,
 }
 
 // LoadFromFile loads and parses a Policy from a TOML file.
@@ -115,10 +117,12 @@ func DefaultPolicy() *Policy {
 				"git_branch", "git_pull", "git_push",
 				"patch",
 				"sed", "jq", "diff", "awk", "tar",
+				"get_env",
 			},
 			AllowMutation:  false,
 			AllowGitWrite:  false,
 			AllowRunScript: false,
+			EnvAllowlist:   []string{},
 		},
 		Limits: LimitsSection{
 			TimeoutMs:      10000,
