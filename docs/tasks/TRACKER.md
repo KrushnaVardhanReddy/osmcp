@@ -42,6 +42,7 @@ This file tracks the status of all Jules tasks and the corresponding Jules sessi
 |------|--------|-------------|----|
 | [Task 21: get_env (Safe Environment Variables)](./phase-4/task21_get_env.md) | Pending | | |
 | [Task 22: hash_file (Cryptographic Digests)](./phase-4/task22_hash_file.md) | Pending | | |
+| [Task 24: Phase 3 & 4 E2E Testing](./phase-4/task24_e2e_testing.md) | Pending | | |
 
 ## Phase 5: Distribution & Launch
 
