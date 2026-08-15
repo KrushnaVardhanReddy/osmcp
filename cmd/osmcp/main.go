@@ -18,13 +18,16 @@ var (
 	policyFlag    = flag.String("policy", ".osmcp/policy.toml", "Path to policy file")
 	auditLogFlag  = flag.String("audit-log", "", "Path to audit log file")
 	validateFlag  = flag.Bool("validate", false, "Validate policy and exit")
+
+	// version is injected by GoReleaser via ldflags during build.
+	version = "dev"
 )
 
 func main() {
 	flag.Parse()
 
 	if *versionFlag {
-		fmt.Println("osmcp v1.1.0")
+		fmt.Printf("osmcp %s\n", version)
 		os.Exit(0)
 	}
 
@@ -131,7 +134,7 @@ func main() {
 	toolRegistry.Register(tools.NewAwkTool(policyEngine, envelopeBuilder))
 	toolRegistry.Register(tools.NewTarTool(policyEngine, envelopeBuilder))
 
-	s := server.NewMCPServer("osmcp", "1.1.0", server.WithToolCapabilities(true))
+	s := server.NewMCPServer("osmcp", version, server.WithToolCapabilities(true))
 
 	visibleTools := toolRegistry.VisibleTools()
 	for _, t := range visibleTools {
