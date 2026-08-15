@@ -50,24 +50,19 @@ func main() {
 	}
 
 	var auditLogger contracts.AuditLogger
-	if *auditLogFlag != "" {
-		l, err := audit.NewLogger("file", *auditLogFlag)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "failed to init audit logger: %v\n", err)
-			os.Exit(1)
-		}
-		auditLogger = l
-	} else if p.Audit.Destination == "stderr" {
-        l, _ := audit.NewLogger("stderr", "")
-        auditLogger = l
-    } else if p.Audit.Destination == "file" && p.Audit.Path != "" {
-        l, err := audit.NewLogger("file", p.Audit.Path)
-        if err != nil {
-            fmt.Fprintf(os.Stderr, "failed to init audit logger: %v\n", err)
-            os.Exit(1)
-        }
-        auditLogger = l
-    }
+	switch {
+	case *auditLogFlag != "":
+		auditLogger, err = audit.NewLogger("file", *auditLogFlag)
+	case p.Audit.Destination == "stderr":
+		auditLogger, err = audit.NewLogger("stderr", "")
+	case p.Audit.Destination == "file" && p.Audit.Path != "":
+		auditLogger, err = audit.NewLogger("file", p.Audit.Path)
+	}
+
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "failed to init audit logger: %v\n", err)
+		os.Exit(1)
+	}
 
 	policyEngine := policy.NewEngine(p, auditLogger)
 	envelopeBuilder := response.NewBuilder()
