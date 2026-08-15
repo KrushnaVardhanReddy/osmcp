@@ -35,3 +35,10 @@ This file tracks the status of all Jules tasks and the corresponding Jules sessi
 |------|--------|-------------|----|
 | [Task 15: Templates & Agent Onboarding](./phase-3/task15_templates_onboarding.md) | Pending | | |
 | [Task 16: run_script (Tier 2 Execution Engine)](./phase-3/task16_run_script.md) | Pending | | |
+
+## Phase 4: System & Diagnostics
+
+| Task | Status | Session URL | PR |
+|------|--------|-------------|----|
+| [Task 21: get_env (Safe Environment Variables)](./phase-4/task21_get_env.md) | Pending | | |
+| [Task 22: hash_file (Cryptographic Digests)](./phase-4/task22_hash_file.md) | Pending | | |

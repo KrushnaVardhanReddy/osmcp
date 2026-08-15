@@ -194,6 +194,16 @@ TASKS = {
         "phase": "phase-3",
         "prompt": _load_prompt("docs/tasks/phase-3/task16_run_script.md"),
     },
+    21: {
+        "name": "Task 21 — get_env (Safe Environment Variables)",
+        "phase": "phase-4",
+        "prompt": _load_prompt("docs/tasks/phase-4/task21_get_env.md"),
+    },
+    22: {
+        "name": "Task 22 — hash_file (Cryptographic Digests)",
+        "phase": "phase-4",
+        "prompt": _load_prompt("docs/tasks/phase-4/task22_hash_file.md"),
+    },
 }
 
 # ── Wave definitions — groups of task IDs to submit together ─────────────────
@@ -201,6 +211,7 @@ WAVES = {
     "phase-1": [4, 5, 6, 7, 8, 9],
     "phase-2": [11, 12, 13, 17, 18, 19, 20, 14],
     "phase-3": [15, 16],
+    "phase-4": [21, 22],
 }
 
 # ──────────────────────────────────────────────────────────────────────────────
