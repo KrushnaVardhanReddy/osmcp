@@ -1,0 +1,15 @@
+{
+  "version": "1",
+  "ok": true,
+  "tool": "find",
+  "data": {
+    "files": [
+      "a.txt"
+    ]
+  },
+  "meta": {
+    "execution_time_ms": 10,
+    "truncated": false
+  },
+  "error": null
+}

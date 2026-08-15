@@ -68,7 +68,7 @@ func TestLsTool(t *testing.T) {
 	ls := tool.(*lsTool)
 
 	t.Run("INV-FILE-08: ls on file", func(t *testing.T) {
-		args := contracts_phase1.LsArgs{Path: filepath.Join(tempDir, "file1.txt")}
+		args := LsArgsExtended{LsArgs: contracts_phase1.LsArgs{Path: filepath.Join(tempDir, "file1.txt")}}
 		env := ls.Execute(context.Background(), args)
 
 		if !env.OK {
@@ -84,7 +84,7 @@ func TestLsTool(t *testing.T) {
 	})
 
 	t.Run("INV-FILE-03: Missing file", func(t *testing.T) {
-		args := contracts_phase1.LsArgs{Path: filepath.Join(tempDir, "missing.txt")}
+		args := LsArgsExtended{LsArgs: contracts_phase1.LsArgs{Path: filepath.Join(tempDir, "missing.txt")}}
 		env := ls.Execute(context.Background(), args)
 
 		if env.OK {
@@ -96,7 +96,7 @@ func TestLsTool(t *testing.T) {
 	})
 
 	t.Run("INV-FILE-02: Policy Check Denied", func(t *testing.T) {
-		args := contracts_phase1.LsArgs{Path: "/tmp/outside_root"}
+		args := LsArgsExtended{LsArgs: contracts_phase1.LsArgs{Path: "/tmp/outside_root"}}
 		env := ls.Execute(context.Background(), args)
 
 		if env.OK {
@@ -108,11 +108,11 @@ func TestLsTool(t *testing.T) {
 	})
 
 	t.Run("Pure listing without hidden files", func(t *testing.T) {
-		args := contracts_phase1.LsArgs{
+		args := LsArgsExtended{LsArgs: contracts_phase1.LsArgs{
 			Path:       tempDir,
 			ShowHidden: false,
 			Recursive:  false,
-		}
+		}}
 		env := ls.Execute(context.Background(), args)
 
 		if !env.OK {
@@ -125,11 +125,11 @@ func TestLsTool(t *testing.T) {
 	})
 
 	t.Run("Listing with hidden files", func(t *testing.T) {
-		args := contracts_phase1.LsArgs{
+		args := LsArgsExtended{LsArgs: contracts_phase1.LsArgs{
 			Path:       tempDir,
 			ShowHidden: true,
 			Recursive:  false,
-		}
+		}}
 		env := ls.Execute(context.Background(), args)
 
 		if !env.OK {
@@ -142,12 +142,12 @@ func TestLsTool(t *testing.T) {
 	})
 
 	t.Run("Recursive listing depth 1", func(t *testing.T) {
-		args := contracts_phase1.LsArgs{
+		args := LsArgsExtended{LsArgs: contracts_phase1.LsArgs{
 			Path:       tempDir,
 			ShowHidden: false,
 			Recursive:  true,
 			MaxDepth:   1,
-		}
+		}}
 		env := ls.Execute(context.Background(), args)
 
 		if !env.OK {
@@ -162,12 +162,12 @@ func TestLsTool(t *testing.T) {
 	})
 
 	t.Run("Recursive listing max depth", func(t *testing.T) {
-		args := contracts_phase1.LsArgs{
+		args := LsArgsExtended{LsArgs: contracts_phase1.LsArgs{
 			Path:       tempDir,
 			ShowHidden: false,
 			Recursive:  true,
 			MaxDepth:   3,
-		}
+		}}
 		env := ls.Execute(context.Background(), args)
 
 		if !env.OK {
@@ -189,11 +189,11 @@ func TestLsTool(t *testing.T) {
 		ls.policy.(*mockPolicyEngine).maxMatches = 1
 		defer func() { ls.policy.(*mockPolicyEngine).maxMatches = 10 }()
 
-		args := contracts_phase1.LsArgs{
+		args := LsArgsExtended{LsArgs: contracts_phase1.LsArgs{
 			Path:       tempDir,
 			ShowHidden: false,
 			Recursive:  false,
-		}
+		}}
 		env := ls.Execute(context.Background(), args)
 
 		if !env.OK {
@@ -207,4 +207,69 @@ func TestLsTool(t *testing.T) {
 			t.Errorf("expected count 1 due to truncation, got %d", data.Count)
 		}
 	})
+
+}
+
+func TestLsTool_Pattern(t *testing.T) {
+	tempDir, tool := setupLsTestEnv(t)
+	ls := tool.(*lsTool)
+
+	// setupLsTestEnv creates:
+	// file1.txt
+	// .hidden_file
+	// dir1/file2.txt
+	// dir1/.hidden_dir/file3.txt
+	// dir1/dir2/file4.txt
+
+	t.Run("Pattern matching files", func(t *testing.T) {
+		args := LsArgsExtended{
+			LsArgs: contracts_phase1.LsArgs{Path: tempDir},
+			Pattern: "*.txt",
+		}
+		env := ls.Execute(context.Background(), args)
+		if !env.OK {
+			t.Fatalf("expected OK, got %v", env.Error)
+		}
+		data := env.Data.(contracts_phase1.LsData)
+		if data.Count != 1 {
+			t.Errorf("expected count 1, got %d", data.Count)
+		}
+	})
+
+	t.Run("Pattern with recursive", func(t *testing.T) {
+		args := LsArgsExtended{
+			LsArgs: contracts_phase1.LsArgs{Path: tempDir, Recursive: true, MaxDepth: 2},
+			Pattern: "*.txt",
+		}
+		env := ls.Execute(context.Background(), args)
+		if !env.OK {
+			t.Fatalf("expected OK, got %v", env.Error)
+		}
+		data := env.Data.(contracts_phase1.LsData)
+		if data.Count != 2 {
+			t.Errorf("expected count 2, got %d", data.Count)
+		}
+	})
+
+	t.Run("Invalid pattern", func(t *testing.T) {
+		args := LsArgsExtended{
+			LsArgs: contracts_phase1.LsArgs{Path: tempDir},
+			Pattern: "[",
+		}
+		env := ls.Execute(context.Background(), args)
+		if env.OK {
+			t.Fatalf("expected failure for invalid pattern")
+		}
+		if env.Error.Code != contracts.ErrInvalidArgs {
+			t.Errorf("expected ErrInvalidArgs, got %v", env.Error.Code)
+		}
+	})
+}
+
+func (m *mockPolicyEngine) RunScriptConfig() contracts.RunScriptConfig {
+	return contracts.RunScriptConfig{}
+}
+
+func (m *mockPolicyEngine) AllowedRoot() string {
+	return "/tmp/mockroot"
 }

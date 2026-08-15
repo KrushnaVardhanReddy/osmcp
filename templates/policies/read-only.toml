@@ -1,0 +1,13 @@
+[policy]
+allowed_root   = "/path/to/project"   # User must fill this in
+allowed_tools  = ["grep", "ls", "cat", "stat", "wc", "head", "tail", "tree", "du", "find",
+                  "git_status", "git_diff", "git_log", "jq", "sed", "diff"]
+allow_mutation = false
+
+[limits]
+timeout_ms       = 5000
+max_output_bytes = 524288   # 512 KB
+max_matches      = 200
+
+[audit]
+destination = "stderr"

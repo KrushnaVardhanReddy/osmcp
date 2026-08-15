@@ -12,10 +12,18 @@ import (
 	"github.com/osmcp/osmcp/docs/contracts/cross_cutting"
 	contracts_phase1 "github.com/osmcp/osmcp/docs/contracts/phase-1"
 	"encoding/json"
+	"strings"
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
 
 )
+
+type GitLogArgsExtended struct {
+	contracts_phase1.GitLogArgs
+	Author string `json:"author,omitempty"`
+	Since  string `json:"since,omitempty"`
+	Until  string `json:"until,omitempty"`
+}
 
 type gitLogTool struct {
 	policy  contracts.PolicyEngine
@@ -41,7 +49,7 @@ func (t *gitLogTool) IsMutating() bool {
 	return false
 }
 
-func (t *gitLogTool) Execute(ctx context.Context, args contracts_phase1.GitLogArgs) contracts.Envelope {
+func (t *gitLogTool) Execute(ctx context.Context, args GitLogArgsExtended) contracts.Envelope {
 	start := time.Now()
 
 	resolvedPath, err := filepath.EvalSymlinks(args.Path)
@@ -78,6 +86,26 @@ func (t *gitLogTool) Execute(ctx context.Context, args contracts_phase1.GitLogAr
 		opts.FileName = args.File
 	}
 
+	if args.Since != "" {
+		sinceTime, err := time.Parse(time.RFC3339, args.Since)
+		if err != nil {
+			return t.builder.Failure(t.Name(), contracts.ErrInvalidArgs, "invalid since date format (must be RFC3339): "+err.Error(), false, contracts.Meta{
+				ExecutionTimeMs: time.Since(start).Milliseconds(),
+			})
+		}
+		opts.Since = &sinceTime
+	}
+
+	if args.Until != "" {
+		untilTime, err := time.Parse(time.RFC3339, args.Until)
+		if err != nil {
+			return t.builder.Failure(t.Name(), contracts.ErrInvalidArgs, "invalid until date format (must be RFC3339): "+err.Error(), false, contracts.Meta{
+				ExecutionTimeMs: time.Since(start).Milliseconds(),
+			})
+		}
+		opts.Until = &untilTime
+	}
+
 	cIter, err := repo.Log(opts)
 	if err != nil {
 		return t.builder.Failure(t.Name(), contracts.ErrExecFailed, "Failed to get git log: "+err.Error(), false, contracts.Meta{
@@ -104,7 +132,18 @@ func (t *gitLogTool) Execute(ctx context.Context, args contracts_phase1.GitLogAr
 
 	truncated := false
 
+	authorLower := ""
+	if args.Author != "" {
+		authorLower = strings.ToLower(args.Author)
+	}
+
 	err = cIter.ForEach(func(c *object.Commit) error {
+		if authorLower != "" {
+			if !strings.Contains(strings.ToLower(c.Author.Name), authorLower) && !strings.Contains(strings.ToLower(c.Author.Email), authorLower) {
+				return nil
+			}
+		}
+
 		if data.Count >= maxCommits {
 			truncated = true
 			return context.Canceled
@@ -154,10 +193,21 @@ func (t *gitLogTool) RegisterMCP(s *server.MCPServer) {
 		mcp.WithString("branch",
 			mcp.Description("Optional. Branch to read history from (defaults to current HEAD)."),
 		),
+		mcp.WithString("author",
+			mcp.Description("Optional. Filter commits by author name or email (case-insensitive substring)."),
+		),
+		mcp.WithString("since",
+			mcp.Description("Optional. Filter commits after this date (RFC3339, e.g. \"2024-01-01T00:00:00Z\")."),
+		),
+		mcp.WithString("until",
+			mcp.Description("Optional. Filter commits before this date (RFC3339)."),
+		),
 	)
 	s.AddTool(mcpTool, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-		args := contracts_phase1.GitLogArgs{
-			MaxCommits: 20,
+		args := GitLogArgsExtended{
+			GitLogArgs: contracts_phase1.GitLogArgs{
+				MaxCommits: 20,
+			},
 		}
 		argsMap, ok := request.Params.Arguments.(map[string]interface{})
 		if ok {
@@ -172,6 +222,15 @@ func (t *gitLogTool) RegisterMCP(s *server.MCPServer) {
 			}
 			if branch, ok := argsMap["branch"].(string); ok {
 				args.Branch = &branch
+			}
+			if author, ok := argsMap["author"].(string); ok {
+				args.Author = author
+			}
+			if since, ok := argsMap["since"].(string); ok {
+				args.Since = since
+			}
+			if until, ok := argsMap["until"].(string); ok {
+				args.Until = until
 			}
 		}
 		envelope := t.Execute(ctx, args)

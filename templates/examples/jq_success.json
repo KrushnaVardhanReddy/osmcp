@@ -1,0 +1,13 @@
+{
+  "version": "1",
+  "ok": true,
+  "tool": "jq",
+  "data": {
+    "output": "{\"key\": \"value\"}"
+  },
+  "meta": {
+    "execution_time_ms": 10,
+    "truncated": false
+  },
+  "error": null
+}

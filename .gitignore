@@ -3,3 +3,5 @@ bin/
 *.log
 error_log.txt
 dist/
+/osmcp
+resume_topics.md

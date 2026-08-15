@@ -1,0 +1,19 @@
+{
+  "version": "1",
+  "ok": true,
+  "tool": "grep",
+  "data": {
+    "matches": [
+      {
+        "file": "a.txt",
+        "line_num": 1,
+        "text": "hello"
+      }
+    ]
+  },
+  "meta": {
+    "execution_time_ms": 10,
+    "truncated": false
+  },
+  "error": null
+}

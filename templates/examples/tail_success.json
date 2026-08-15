@@ -1,0 +1,13 @@
+{
+  "version": "1",
+  "ok": true,
+  "tool": "tail",
+  "data": {
+    "content": "hello\nworld"
+  },
+  "meta": {
+    "execution_time_ms": 10,
+    "truncated": false
+  },
+  "error": null
+}

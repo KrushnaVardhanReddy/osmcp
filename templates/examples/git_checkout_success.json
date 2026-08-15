@@ -1,0 +1,13 @@
+{
+  "version": "1",
+  "ok": true,
+  "tool": "git_checkout",
+  "data": {
+    "branch": "main"
+  },
+  "meta": {
+    "execution_time_ms": 10,
+    "truncated": false
+  },
+  "error": null
+}

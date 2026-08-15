@@ -1,0 +1,15 @@
+{
+  "version": "1",
+  "ok": false,
+  "tool": "jq",
+  "data": null,
+  "meta": {
+    "execution_time_ms": 10,
+    "truncated": false
+  },
+  "error": {
+    "code": "INVALID_ARGS",
+    "message": "filter is required",
+    "retryable": false
+  }
+}

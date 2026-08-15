@@ -272,3 +272,41 @@ func TestE2E_Wc_PolicyDenial(t *testing.T) {
 	assert.False(t, env.OK)
 	assert.Equal(t, contracts.ErrPolicyDenied, env.Error.Code)
 }
+
+func TestE2E_Ls_Pattern(t *testing.T) {
+	tempRoot := t.TempDir()
+	os.WriteFile(filepath.Join(tempRoot, "test1.txt"), []byte(""), 0644)
+	os.WriteFile(filepath.Join(tempRoot, "test2.log"), []byte(""), 0644)
+
+	c := setupMCPClient(t, writeTempPolicy(t, tempRoot))
+	defer c.Close()
+
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
+
+	req := mcp.CallToolRequest{}
+	req.Params.Name = "ls"
+	req.Params.Arguments = map[string]interface{}{
+		"path":    tempRoot,
+		"pattern": "*.log",
+	}
+
+	res, err := c.client.CallTool(ctx, req)
+	assert.NoError(t, err)
+	assert.False(t, res.IsError)
+
+	textRes, ok := res.Content[0].(mcp.TextContent)
+	assert.True(t, ok)
+
+	var env contracts.Envelope
+	err = json.Unmarshal([]byte(textRes.Text), &env)
+	assert.NoError(t, err)
+	assert.True(t, env.OK)
+
+	dataBytes, _ := json.Marshal(env.Data)
+	var data contracts_phase1.LsData
+	err = json.Unmarshal(dataBytes, &data)
+	assert.NoError(t, err)
+	assert.Equal(t, 1, data.Count)
+	assert.Equal(t, "test2.log", data.Entries[0].Name)
+}

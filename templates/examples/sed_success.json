@@ -1,0 +1,13 @@
+{
+  "version": "1",
+  "ok": true,
+  "tool": "sed",
+  "data": {
+    "content": "hello world"
+  },
+  "meta": {
+    "execution_time_ms": 10,
+    "truncated": false
+  },
+  "error": null
+}

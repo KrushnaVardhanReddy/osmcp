@@ -1,0 +1,14 @@
+{
+  "version": "1",
+  "ok": true,
+  "tool": "du",
+  "data": {
+    "size_bytes": 1024,
+    "human_readable": "1.0K"
+  },
+  "meta": {
+    "execution_time_ms": 10,
+    "truncated": false
+  },
+  "error": null
+}

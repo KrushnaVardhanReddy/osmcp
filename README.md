@@ -2,17 +2,24 @@
 
 > **A typed, policy-controlled OS capability layer for AI agents via the Model Context Protocol (MCP).**
 
-osmcp exposes a curated set of read-only filesystem, git, and text-processing tools to AI agents — all governed by a strict **Policy Engine** that enforces path boundaries, tool allowlists, output limits, and an immutable audit trail.
+osmcp exposes a curated set of safe filesystem, git, and text-processing tools to AI agents — all governed by a strict **Policy Engine** that enforces path boundaries, tool allowlists, output limits, mutation controls, and an immutable audit trail.
 
-## Features (Phase 1 — v1.0.0)
+📖 **Read the comprehensive [Architecture & Design Document](docs/ARCHITECTURE.md)** for a deep dive into the philosophy, safety boundaries, and design decisions behind osmcp.
 
-| Category | Tools |
-|---|---|
-| 🔍 **Search** | `grep`, `find` |
-| 📁 **File Inspection** | `ls`, `cat`, `stat`, `wc`, `head`, `tail` |
-| 🌳 **Filesystem** | `tree`, `du` |
-| 🔀 **Git Intelligence** | `git_status`, `git_diff`, `git_log` |
-| 🔧 **Transform** | `jq`, `sed`, `diff` |
+[![LiteLLM Compatible](https://img.shields.io/badge/LiteLLM-Compatible-blue?style=flat-square)](docs/integrations/litellm.md)
+[![Smithery Verified](https://img.shields.io/badge/Smithery-Verified-green?style=flat-square)](#smithery-integration)
+
+## Features
+
+| Category | Tools | Phase |
+|---|---|---|
+| 🔍 **Search** | `grep`, `find` | 1 |
+| 📁 **File Inspection** | `ls`, `cat`, `stat`, `wc`, `head`, `tail` | 1 |
+| 🌳 **Filesystem** | `tree`, `du` | 1 |
+| 🔀 **Git Intelligence** | `git_status`, `git_diff`, `git_log` | 1 |
+| 🔧 **Transform** | `jq`, `sed`, `diff` | 1 |
+| ✍️ **File Mutation** | `write_file`, `append_file`, `mkdir`, `rm`, `mv`, `cp`, `patch` | 2 |
+| 🚀 **Git Mutation** | `git_add`, `git_commit`, `git_checkout`, `git_branch`, `git_pull`, `git_push` | 2 |
 
 ## Architecture
 
@@ -27,10 +34,21 @@ osmcp binary
     └── Envelope Builder   ← typed {ok, data, error, meta} responses
 ```
 
+## Demo
+
+![osmcp Demo Action](https://raw.githubusercontent.com/KrushnaVardhanReddy/osmcp/main/assets/demo.gif)
+*A demonstration of Claude Desktop securely editing code via osmcp, safely bounded by a TOML policy engine.*
+
 ## Quick Start
 
-### 1. Build
+### 1. Install via Homebrew
 
+```bash
+brew tap KrushnaVardhanReddy/tap
+brew install osmcp
+```
+
+*Alternatively, build from source:*
 ```bash
 make build
 # Binary: bin/osmcp
@@ -61,9 +79,35 @@ path        = "/var/log/osmcp-audit.ndjson"
 bin/osmcp --policy policy.toml
 ```
 
-The binary communicates over **stdio** using MCP JSON-RPC. Connect any MCP-compatible client (Claude Desktop, Cursor, etc.).
+The binary communicates over **stdio** using MCP JSON-RPC. Connect any MCP-compatible client.
 
-### 4. Test
+## Client Integrations
+
+### Claude Desktop
+Add the following to your `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "osmcp": {
+      "command": "osmcp",
+      "args": ["--policy", "/absolute/path/to/policy.toml"]
+    }
+  }
+}
+```
+
+### Smithery (npx)
+To install `osmcp` for Claude Desktop automatically via Smithery:
+
+```bash
+npx @smithery/cli install osmcp
+```
+
+### LiteLLM
+Integrate `osmcp` into your enterprise LLM proxy using the [LiteLLM MCP Gateway](docs/integrations/litellm.md).
+
+### 5. Test
 
 ```bash
 make test     # unit tests
@@ -98,3 +142,13 @@ All tool responses follow a consistent typed envelope:
 ## License
 
 MIT
+
+## Acknowledgements
+
+`osmcp` would not be possible without the incredible open-source libraries it is built upon:
+- [mcp-go](https://github.com/mark3labs/mcp-go) for the core Model Context Protocol SDK.
+- [go-git](https://github.com/go-git/go-git) for pure Go git manipulation.
+- [gojq](https://github.com/itchyny/gojq) for pure Go JSON processing.
+- [go-gitdiff](https://github.com/bluekeyes/go-gitdiff) for parsing and applying patches.
+- [grep-go](https://github.com/tanqiangyes/grep-go) for regular expression searching.
+- [toml](https://github.com/BurntSushi/toml) for configuration parsing.

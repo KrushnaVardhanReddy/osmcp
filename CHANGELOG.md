@@ -5,9 +5,18 @@ Follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and [Semantic V
 
 ---
 
-## [v1.0.0] — 2026-08-15
+## [v1.1.0] — Phase 2 Completion
 
-### 🎉 Phase 1 — Initial Release
+### Added
+- **File System Mutation Tools**: `write_file`, `append_file`, `mkdir`, `rm`, `mv`, `cp`.
+- **Git Mutation Tools**: `git_add`, `git_commit`, `git_checkout`, `git_branch`, `git_pull`, `git_push`.
+- **Advanced Tools**: `patch` (applying unified diffs), `sort`, `awk` (data extraction), `tar` (read-only archive inspection).
+- **Built-in Filter Parameters**: Added `pattern` to `ls` and `author`/`since`/`until` to `git_log` for server-side filtering.
+- **End-to-End Testing**: Comprehensive test suite covering all mutation tools enforcing strict policy constraints.
+
+---
+
+## [v1.0.0] — 2026-08-15
 
 This is the first stable release of **osmcp**, a typed, policy-controlled OS capability layer for AI agents.
 

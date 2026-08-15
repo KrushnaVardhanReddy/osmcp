@@ -1,0 +1,14 @@
+[policy]
+allowed_root = "/"
+allowed_tools = ["get_env"]
+allow_mutation = false
+allow_git_write = false
+allow_run_script = false
+
+[limits]
+timeout_ms = 10000
+max_output_bytes = 524288
+max_matches = 1000
+
+[audit]
+destination = "stderr"

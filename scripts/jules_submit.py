@@ -144,11 +144,90 @@ TASKS = {
         "phase": "phase-1",
         "prompt": _load_prompt("docs/tasks/phase-1/task9_e2e_testing.md"),
     },
+    11: {
+        "name": "Task 11 — File System Mutation",
+        "phase": "phase-2",
+        "prompt": _load_prompt("docs/tasks/phase-2/task11_fs_mutation.md"),
+    },
+    12: {
+        "name": "Task 12 — Git Mutation",
+        "phase": "phase-2",
+        "prompt": _load_prompt("docs/tasks/phase-2/task12_git_mutation.md"),
+    },
+    13: {
+        "name": "Task 13 — Patch Mutation",
+        "phase": "phase-2",
+        "prompt": _load_prompt("docs/tasks/phase-2/task13_patch_mutation.md"),
+    },
+    14: {
+        "name": "Task 14 — Phase 2 E2E Testing",
+        "phase": "phase-2",
+        "prompt": _load_prompt("docs/tasks/phase-2/task14_e2e_testing.md"),
+    },
+    17: {
+        "name": "Task 17 — sort",
+        "phase": "phase-2",
+        "prompt": _load_prompt("docs/tasks/phase-2/task17_sort.md"),
+    },
+    18: {
+        "name": "Task 18 — awk",
+        "phase": "phase-2",
+        "prompt": _load_prompt("docs/tasks/phase-2/task18_awk.md"),
+    },
+    19: {
+        "name": "Task 19 — tar",
+        "phase": "phase-2",
+        "prompt": _load_prompt("docs/tasks/phase-2/task19_tar.md"),
+    },
+    20: {
+        "name": "Task 20 — Built-in Filter Params",
+        "phase": "phase-2",
+        "prompt": _load_prompt("docs/tasks/phase-2/task20_filter_params.md"),
+    },
+    15: {
+        "name": "Task 15 — Templates & Agent Onboarding",
+        "phase": "phase-3",
+        "prompt": _load_prompt("docs/tasks/phase-3/task15_templates_onboarding.md"),
+    },
+    16: {
+        "name": "Task 16 — run_script (Tier 2 Execution Engine)",
+        "phase": "phase-3",
+        "prompt": _load_prompt("docs/tasks/phase-3/task16_run_script.md"),
+    },
+    21: {
+        "name": "Task 21 — get_env (Safe Environment Variables)",
+        "phase": "phase-4",
+        "prompt": _load_prompt("docs/tasks/phase-4/task21_get_env.md"),
+    },
+    22: {
+        "name": "Task 22 — hash_file (Cryptographic Digests)",
+        "phase": "phase-4",
+        "prompt": _load_prompt("docs/tasks/phase-4/task22_hash_file.md"),
+    },
+    23: {
+        "name": "Task 23 — Launch Materials (Claude Config, Anthropic PR, Demo)",
+        "phase": "phase-5",
+        "prompt": _load_prompt("docs/tasks/phase-5/task23_distribution.md"),
+    },
+    24: {
+        "name": "Task 24 — Phase 3 & 4 E2E Testing",
+        "phase": "phase-4",
+        "prompt": _load_prompt("docs/tasks/phase-4/task24_e2e_testing.md"),
+    },
+    25: {
+        "name": "Task 25 — LiteLLM MCP Ecosystem Publishing",
+        "phase": "phase-5",
+        "prompt": _load_prompt("docs/tasks/phase-5/task25_litellm_publishing.md"),
+    },
 }
 
 # ── Wave definitions — groups of task IDs to submit together ─────────────────
 WAVES = {
     "phase-1": [4, 5, 6, 7, 8, 9],
+    "phase-2": [11, 12, 13, 17, 18, 19, 20, 14],
+    "phase-3": [15, 16],
+    "phase-4": [21, 22, 24],
+    "phase-5": [23, 25],
 }
 
 # ──────────────────────────────────────────────────────────────────────────────

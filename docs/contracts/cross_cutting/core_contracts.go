@@ -91,6 +91,18 @@ type PolicyEngine interface {
 
 	// Limits returns the resource limits from the active policy (timeout, output cap, etc.)
 	Limits() PolicyLimits
+
+	// AllowedRoot returns the configured allowed root path.
+	AllowedRoot() string
+
+	// RunScriptConfig returns the run_script specific configuration
+	RunScriptConfig() RunScriptConfig
+}
+
+// RunScriptConfig holds the run_script specific configuration from the active policy.
+type RunScriptConfig struct {
+	BlockedBinaries []string
+	AllowNetwork    bool
 }
 
 // PolicyLimits holds the resource limits enforced by the Execution Engine.

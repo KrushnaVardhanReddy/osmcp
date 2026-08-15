@@ -1,0 +1,15 @@
+{
+  "version": "1",
+  "ok": false,
+  "tool": "git_diff",
+  "data": null,
+  "meta": {
+    "execution_time_ms": 10,
+    "truncated": false
+  },
+  "error": {
+    "code": "EXEC_FAILED",
+    "message": "git command failed",
+    "retryable": false
+  }
+}

@@ -11,9 +11,15 @@ import (
 
 // Policy matches the TOML schema in spec §2.
 type Policy struct {
-	PolicyConfig PolicySection `toml:"policy"`
-	Limits       LimitsSection `toml:"limits"`
-	Audit        AuditSection  `toml:"audit"`
+	PolicyConfig PolicySection   `toml:"policy"`
+	RunScript    RunScriptSection `toml:"run_script"`
+	Limits       LimitsSection   `toml:"limits"`
+	Audit        AuditSection    `toml:"audit"`
+}
+
+type RunScriptSection struct {
+	BlockedBinaries []string `toml:"blocked_binaries"`
+	AllowNetwork    bool     `toml:"allow_network"`
 }
 
 type PolicySection struct {
@@ -22,6 +28,7 @@ type PolicySection struct {
 	AllowMutation  bool     `toml:"allow_mutation"`
 	AllowGitWrite  bool     `toml:"allow_git_write"`
 	AllowRunScript bool     `toml:"allow_run_script"`
+	EnvAllowlist   []string `toml:"env_allowlist"`
 }
 
 type LimitsSection struct {
@@ -39,11 +46,16 @@ type AuditSection struct {
 var knownTools = map[string]bool{
 	"grep": true, "find": true, "ls": true, "cat": true, "head": true, "tail": true,
 	"tree": true, "du": true,
-	"wc": true, "stat": true,
+	"wc": true, "stat": true, "sort": true,
 	"git_status": true, "git_diff": true, "git_log": true,
 	"sed": true, "jq": true, "diff": true,
 	"cp": true, "mv": true, "rm": true, "mkdir": true,
-	"git_add": true, "git_commit": true, "git_branch": true,
+	"git_add": true, "git_commit": true, "git_checkout": true,
+	"git_branch": true, "git_pull": true, "git_push": true, "patch": true,
+	"awk": true,
+	"tar": true,
+	"get_env": true, "hash_file": true,
+	"run_script": true,
 }
 
 // LoadFromFile loads and parses a Policy from a TOML file.
@@ -106,13 +118,18 @@ func DefaultPolicy() *Policy {
 			AllowedTools: []string{
 				"grep", "find", "ls", "cat", "head", "tail",
 				"tree", "du",
-				"wc", "stat",
+				"wc", "stat", "sort",
 				"git_status", "git_diff", "git_log",
-				"sed", "jq", "diff",
+				"git_add", "git_commit", "git_checkout",
+				"git_branch", "git_pull", "git_push",
+				"patch",
+				"sed", "jq", "diff", "awk", "tar",
+				"get_env", "hash_file",
 			},
 			AllowMutation:  false,
 			AllowGitWrite:  false,
 			AllowRunScript: false,
+			EnvAllowlist:   []string{},
 		},
 		Limits: LimitsSection{
 			TimeoutMs:      10000,

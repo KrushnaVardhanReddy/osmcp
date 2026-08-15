@@ -1,0 +1,13 @@
+{
+  "version": "1",
+  "ok": true,
+  "tool": "cat",
+  "data": {
+    "content": "hello wor..."
+  },
+  "meta": {
+    "execution_time_ms": 10,
+    "truncated": true
+  },
+  "error": null
+}
