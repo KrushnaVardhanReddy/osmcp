@@ -48,6 +48,10 @@ allowed_tools = [
 # Mutating filesystem tools (cp, mv, rm, mkdir). Off by default.
 allow_mutation = false
 
+# Strict read-only exclusion paths. Even if allow_mutation is true, tools cannot mutate paths
+# that start with any of these prefixes. Checked after symlink resolution.
+read_only_paths = []
+
 # Git write ops (git_add, git_commit, git_branch). Off by default.
 allow_git_write = false
 

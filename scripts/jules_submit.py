@@ -51,7 +51,7 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO_SOURCE = "sources/github/KrushnaVardhanReddy/osmcp"
 
 # Parse branch from args if provided
-BRANCH = "main"
+BRANCH = "feature/dev"
 if "--branch" in sys.argv:
     idx = sys.argv.index("--branch")
     if idx + 1 < len(sys.argv):
@@ -114,16 +114,41 @@ TASKS = {
         "phase": "phase-1",
         "prompt": _load_prompt("docs/tasks/phase-1/task2_grep_and_server.md"),
     },
-    3: {
-        "name": "Task 3 — E2E Testing",
+    4: {
+        "name": "Task 4 — File Inspection (ls, cat, stat, wc)",
         "phase": "phase-1",
-        "prompt": _load_prompt("docs/tasks/phase-1/task3_e2e_testing.md"),
+        "prompt": _load_prompt("docs/tasks/phase-1/task4_file_inspection.md"),
+    },
+    5: {
+        "name": "Task 5 — Git Intelligence (git_status, git_diff, git_log)",
+        "phase": "phase-1",
+        "prompt": _load_prompt("docs/tasks/phase-1/task5_git_tools.md"),
+    },
+    6: {
+        "name": "Task 6 — find Tool",
+        "phase": "phase-1",
+        "prompt": _load_prompt("docs/tasks/phase-1/task6_find.md"),
+    },
+    7: {
+        "name": "Task 7 — Transform Tools (jq, sed, diff)",
+        "phase": "phase-1",
+        "prompt": _load_prompt("docs/tasks/phase-1/task7_transform_tools.md"),
+    },
+    8: {
+        "name": "Task 8 — Utility Tools (tree, head, tail, du)",
+        "phase": "phase-1",
+        "prompt": _load_prompt("docs/tasks/phase-1/task8_utility_tools.md"),
+    },
+    9: {
+        "name": "Task 9 — E2E Testing",
+        "phase": "phase-1",
+        "prompt": _load_prompt("docs/tasks/phase-1/task9_e2e_testing.md"),
     },
 }
 
 # ── Wave definitions — groups of task IDs to submit together ─────────────────
 WAVES = {
-    "phase-1": [1, 2, 3],
+    "phase-1": [4, 5, 6, 7, 8, 9],
 }
 
 # ──────────────────────────────────────────────────────────────────────────────

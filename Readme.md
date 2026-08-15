@@ -664,30 +664,26 @@ osmcp targets **MCP spec 2025-03-26** (the first stable release). Compatibility 
 
 ## Roadmap
 
-### v1 — Core read + sandbox foundation
-- Core read tools: `grep`, `find`, `ls`, `cat`, `head`, `tail`, `wc`, `stat`
-- Read-only git: `git_status`, `git_diff`, `git_log`
-- Core transform tools: `sed`, `jq`, `diff`
-- Policy Engine: TOML config, path jail, tool allowlist, capability-based visibility
-- `run_script`: buffered, path-jailed, with binary blocklist
-- Uniform JSON response envelope (with `version` field)
-- Stable error code enum
-- Structured audit log (stderr + file destination)
-- Homebrew formula, static binaries for macOS/Linux (arm64/amd64)
-- `--validate` flag for CI policy linting
+### v1 — Core read + sandbox foundation *(in progress)*
+**File Inspection:** `ls`, `cat`, `stat`, `wc`, `head`, `tail`, `tree`, `du`
+**Search & Discovery:** `grep`, `find`
+**Git Intelligence (read-only):** `git_status`, `git_diff`, `git_log`
+**Data Transformation:** `jq`, `sed`, `diff`
+**Infrastructure:** Policy Engine (TOML, path jail, tool allowlist, capability visibility), Uniform JSON envelope, Structured audit log (NDJSON), `--validate` flag for CI policy linting, Homebrew formula + static binaries (macOS/Linux arm64/amd64)
 
-### v2 — Mutating ops + multi-agent + streaming
-- Mutating filesystem tools: `cp`, `mv`, `rm`, `mkdir`
-- Git write ops: `git_add`, `git_commit`, `git_branch`
-- Dry-run mode for all mutating tools
-- Project-level `.osmcp/policy.toml` (committed to repo)
-- HTTP/SSE transport with named agent profiles and Bearer token auth
-- Streaming output for `run_script`
-- `run_script` cancellation via MCP `tools/cancel`
-- Prometheus metrics endpoint
-- `GET /healthz` health check
-- Hot-reload policy on `SIGHUP`
-- Human-in-the-loop confirmation hook for destructive ops
+### v2 — Mutating ops + surgical edits + streaming
+**Mutating Filesystem:** `cp`, `mv`, `rm`, `mkdir`
+**Git Write Ops:** `git_add`, `git_commit`, `git_branch`, `git_stash`
+**Surgical File Edit (`patch`):** Modify files by line range (insert/replace/delete). Safer than AI rewriting entire files. Gated by `allow_mutation = true`.
+**File Watching (`watch`):** Emit MCP notifications when files in a directory change. Allows agents to react to events rather than polling.
+**Archiving (`archive`):** Create and extract `.tar.gz`/`.zip` in pure Go.
+**Dry-run mode** for all mutating tools
+**Project-level `.osmcp/policy.toml`** (committed to repo for team-wide rules)
+**HTTP/SSE transport** with named agent profiles and Bearer token auth
+**Streaming output** for `run_script` + cancellation via MCP `tools/cancel`
+**Human-in-the-loop confirmation hook** for destructive ops
+Prometheus metrics endpoint + `GET /healthz` health check
+Hot-reload policy on `SIGHUP`
 
 ### v3 — Deep sandboxing + ecosystem
 - Linux namespaces / landlock for `run_script` (kernel-level network block)

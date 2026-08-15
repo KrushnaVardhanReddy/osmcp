@@ -43,7 +43,7 @@ Implement the `EnvelopeBuilder` interface from `core_contracts.go`:
 ### 3. Implement `internal/policy` package
 
 File: `internal/policy/policy.go`
-- Define the `Policy` struct matching the TOML schema in spec §2.
+- Define the `Policy` struct matching the TOML schema in spec §2 (including `ReadOnlyPaths`).
 - Implement `LoadFromFile(path string) (*Policy, error)` using BurntSushi/toml.
 - Implement `Validate(*Policy) []error` — used by `--validate` CLI flag.
   Validation rules: spec §6.
@@ -53,21 +53,13 @@ File: `internal/policy/engine.go`
 - Implement `PolicyEngine` interface from `core_contracts.go`.
 - `Evaluate()` must follow the exact algorithm in spec §3 — check order matters.
 - Symlink resolution: use `filepath.EvalSymlinks` before prefix comparison.
+- `Evaluate()` must enforce `ReadOnlyPaths` if `isMutating` is true.
 - `IsToolVisible()` must check `policy.AllowedTools` (case-sensitive exact match).
 - `Limits()` returns the `PolicyLimits` from the loaded policy.
 
-### 4. Implement `internal/executor` package
 
-File: `internal/executor/executor.go`
-- Implement `Executor` interface from `core_contracts.go`.
-- Use `os/exec.Cmd` with `shell: false` — args go directly to `Cmd.Args`.
-- Apply context timeout: `context.WithTimeout(ctx, opts.Timeout)`.
-- Cap output: stop reading stdout+stderr once combined bytes exceed `opts.MaxOutput`.
-  Set `ExecResult.Truncated = true` when cap is hit.
-- On context deadline exceeded: set `ExecResult.TimedOut = true`.
-- Working directory: set `Cmd.Dir = opts.WorkingDir`.
 
-### 5. Implement `internal/audit` package
+### 4. Implement `internal/audit` package
 
 File: `internal/audit/logger.go`
 - Implement `AuditLogger` interface from `core_contracts.go`.
@@ -83,7 +75,7 @@ File: `internal/audit/logger.go`
   - `internal/response`: Success and Failure envelopes serialize to exactly the shapes in spec §5 and §6.
   - `internal/policy`: All 12 evaluation cases in spec §3 produce correct ALLOW/DENY results.
   - `internal/policy`: `Validate()` catches invalid `allowed_root`, unknown tool names, out-of-range limits.
-  - `internal/executor`: Timeout enforcement, output truncation, exit-code capture.
+
   - `internal/audit`: NDJSON output is valid JSON-per-line; mutex prevents data races under `-race`.
 - **No mock implementations.** All tests use real types, not stubs.
 - **No tool implementations yet.** This task ends at the foundation layer.
@@ -97,8 +89,7 @@ internal/response/envelope_test.go
 internal/policy/policy.go
 internal/policy/engine.go
 internal/policy/engine_test.go
-internal/executor/executor.go
-internal/executor/executor_test.go
+
 internal/audit/logger.go
 internal/audit/logger_test.go
 testdata/policies/readonly.toml

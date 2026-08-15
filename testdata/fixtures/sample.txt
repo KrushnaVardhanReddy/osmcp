@@ -1,0 +1,7 @@
+this is a sample text file.
+it contains literal strings like .* and regex[a-z]+.
+it also has multiple lines for context testing.
+line 4 is here.
+line 5 is the target.
+line 6 comes after.
+line 7 is here.

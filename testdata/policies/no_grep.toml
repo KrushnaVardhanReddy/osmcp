@@ -1,0 +1,12 @@
+[policy]
+allowed_root = "/app/testdata"
+allowed_tools = ["ls"] # grep not here
+allow_mutation = false
+
+[limits]
+timeout_ms = 5000
+max_output_bytes = 1048576
+max_matches = 100
+
+[audit]
+destination = "stderr"
