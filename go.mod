@@ -4,6 +4,7 @@ go 1.25.5
 
 require (
 	github.com/BurntSushi/toml v1.6.0
+	github.com/benhoyt/goawk v1.31.0
 	github.com/bluekeyes/go-gitdiff v0.9.0
 	github.com/go-git/go-git/v5 v5.19.2
 	github.com/itchyny/gojq v0.12.19
@@ -11,13 +12,13 @@ require (
 	github.com/sergi/go-diff v1.3.2-0.20230802210424-5b0b94c5c0d3
 	github.com/stretchr/testify v1.11.1
 	github.com/tanqiangyes/grep-go v0.0.0-20220515134556-b36bff9c3d8e
+	github.com/ulikunitz/xz v0.5.16
 )
 
 require (
 	dario.cat/mergo v1.0.0 // indirect
 	github.com/Microsoft/go-winio v0.6.2 // indirect
 	github.com/ProtonMail/go-crypto v1.1.6 // indirect
-	github.com/benhoyt/goawk v1.31.0 // indirect
 	github.com/cloudflare/circl v1.6.3 // indirect
 	github.com/cyphar/filepath-securejoin v0.6.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
@@ -39,7 +40,7 @@ require (
 	github.com/santhosh-tekuri/jsonschema/v6 v6.0.2 // indirect
 	github.com/skeema/knownhosts v1.3.1 // indirect
 	github.com/spf13/cast v1.7.1 // indirect
-	github.com/ulikunitz/xz v0.5.16 // indirect
+	github.com/stretchr/objx v0.5.2 // indirect
 	github.com/xanzy/ssh-agent v0.3.3 // indirect
 	github.com/yosida95/uritemplate/v3 v3.0.2 // indirect
 	golang.org/x/crypto v0.53.0 // indirect
