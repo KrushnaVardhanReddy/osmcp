@@ -151,9 +151,13 @@ func (t *runScriptTool) execute(ctx context.Context, args contracts_phase3.RunSc
 		cmd.Dir = t.policy.AllowedRoot()
 	}
 
+	path := os.Getenv("PATH")
+	if path == "" {
+		path = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+	}
 	cmd.Env = []string{
 		"HOME=" + os.Getenv("HOME"),
-		"PATH=" + os.Getenv("PATH"),
+		"PATH=" + path,
 		"TMPDIR=" + os.Getenv("TMPDIR"),
 	}
 
@@ -163,7 +167,11 @@ func (t *runScriptTool) execute(ctx context.Context, args contracts_phase3.RunSc
 	cmd.Stdout = &stdoutBuf
 	cmd.Stderr = &stderrBuf
 
-	execErr := cmd.Run()
+	if startErr := cmd.Start(); startErr != nil {
+		return t.builder.Failure(t.Name(), contracts.ErrInvalidArgs, fmt.Sprintf("failed to start script: %v", startErr), false, meta)
+	}
+
+	execErr := cmd.Wait()
 
 	timedOut := false
 	if execCtx.Err() == context.DeadlineExceeded {

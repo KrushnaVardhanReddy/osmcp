@@ -3,12 +3,13 @@
 package tools
 
 import (
+	"os"
 	"os/exec"
 	"syscall"
 )
 
 func applySysProcAttr(cmd *exec.Cmd, allowNetwork bool) {
-	if !allowNetwork {
+	if !allowNetwork && os.Getuid() == 0 {
 		if cmd.SysProcAttr == nil {
 			cmd.SysProcAttr = &syscall.SysProcAttr{}
 		}
