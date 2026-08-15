@@ -144,11 +144,32 @@ TASKS = {
         "phase": "phase-1",
         "prompt": _load_prompt("docs/tasks/phase-1/task9_e2e_testing.md"),
     },
+    11: {
+        "name": "Task 11 — File System Mutation",
+        "phase": "phase-2",
+        "prompt": _load_prompt("docs/tasks/phase-2/task11_fs_mutation.md"),
+    },
+    12: {
+        "name": "Task 12 — Git Mutation",
+        "phase": "phase-2",
+        "prompt": _load_prompt("docs/tasks/phase-2/task12_git_mutation.md"),
+    },
+    13: {
+        "name": "Task 13 — Patch Mutation",
+        "phase": "phase-2",
+        "prompt": _load_prompt("docs/tasks/phase-2/task13_patch_mutation.md"),
+    },
+    14: {
+        "name": "Task 14 — Phase 2 E2E Testing",
+        "phase": "phase-2",
+        "prompt": _load_prompt("docs/tasks/phase-2/task14_e2e_testing.md"),
+    },
 }
 
 # ── Wave definitions — groups of task IDs to submit together ─────────────────
 WAVES = {
     "phase-1": [4, 5, 6, 7, 8, 9],
+    "phase-2": [11, 12, 13, 14],
 }
 
 # ──────────────────────────────────────────────────────────────────────────────
