@@ -9,9 +9,8 @@
   "version": "1.0.3",
   "packages": [
     {
-      "registryType": "docker",
-      "identifier": "ghcr.io/krushnavardhanreddy/osmcp",
-      "version": "1.0.3",
+      "registryType": "oci",
+      "identifier": "ghcr.io/krushnavardhanreddy/osmcp:latest",
       "transport": {
         "type": "stdio"
       }
