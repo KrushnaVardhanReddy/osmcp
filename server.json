@@ -6,7 +6,7 @@
     "url": "https://github.com/KrushnaVardhanReddy/osmcp",
     "source": "github"
   },
-  "version": "1.0.3",
+  "version": "1.0.4",
   "packages": [
     {
       "registryType": "oci",
