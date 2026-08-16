@@ -1,0 +1,20 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.KrushnaVardhanReddy/osmcp",
+  "description": "A typed, policy-controlled OS capability layer for AI agents.",
+  "repository": {
+    "url": "https://github.com/KrushnaVardhanReddy/osmcp",
+    "source": "github"
+  },
+  "version": "1.0.0",
+  "packages": [
+    {
+      "registryType": "docker",
+      "identifier": "ghcr.io/krushnavardhanreddy/osmcp",
+      "version": "1.0.0",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}

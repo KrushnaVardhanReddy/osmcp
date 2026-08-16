@@ -42,6 +42,17 @@ checksum:
 snapshot:
   version_template: "{{ incpatch .Version }}-next"
 
+dockers:
+  - image_templates:
+      - "ghcr.io/krushnavardhanreddy/osmcp:{{ .Tag }}"
+      - "ghcr.io/krushnavardhanreddy/osmcp:v{{ .Major }}.{{ .Minor }}"
+      - "ghcr.io/krushnavardhanreddy/osmcp:latest"
+    build_flag_templates:
+      - "--label=org.opencontainers.image.title={{ .ProjectName }}"
+      - "--label=org.opencontainers.image.description={{ .ProjectName }}"
+      - "--label=org.opencontainers.image.version={{ .Version }}"
+      - "--label=org.opencontainers.image.source=https://github.com/KrushnaVardhanReddy/osmcp"
+
 changelog:
   sort: asc
   filters:
